@@ -20,7 +20,7 @@ class TitleRow extends StatelessWidget {
           ),
         ),
         const SizedBox(
-          width: 30,
+          width: 20,
         ),
         Image.network(
           imageUrl,

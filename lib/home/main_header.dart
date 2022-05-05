@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hearooz/home/header_sub/media_buttons.dart';
+import 'package:hearooz/home/screens/search_button_tap.dart';
 import 'package:hearooz/utils/colors.dart';
 
 class Header extends StatelessWidget {
@@ -100,21 +101,36 @@ class Header extends StatelessWidget {
                 width: MediaQuery.of(context).size.width / 3,
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: const [
-                    Icon(
-                      Icons.home,
-                      size: 30,
-                      color: Colors.white,
+                  children: [
+                    InkWell(
+                      onTap: () {},
+                      child: const Icon(
+                        Icons.home,
+                        size: 30,
+                        color: Colors.white,
+                      ),
                     ),
-                    Icon(
-                      CupertinoIcons.heart_fill,
-                      size: 30,
-                      color: Colors.white,
+                    InkWell(
+                      onTap: () {},
+                      child: const Icon(
+                        CupertinoIcons.heart_fill,
+                        size: 30,
+                        color: Colors.white,
+                      ),
                     ),
-                    Icon(
-                      CupertinoIcons.search,
-                      size: 30,
-                      color: Colors.white,
+                    InkWell(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const SearchButtonTap()),
+                        );
+                      },
+                      child: const Icon(
+                        CupertinoIcons.search,
+                        size: 30,
+                        color: Colors.white,
+                      ),
                     ),
                   ],
                 ),
