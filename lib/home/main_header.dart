@@ -10,8 +10,7 @@ class Header extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.only(top: 10),
-      height: 200,
+      height: 150,
       color: Colors.blue[700],
       child: Column(
         children: [
@@ -79,68 +78,6 @@ class Header extends StatelessWidget {
                     color: Colors.white,
                     fontWeight: FontWeight.w600,
                   ),
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(
-            height: 20,
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              const Padding(
-                padding: EdgeInsets.only(left: 8.0),
-                child: Icon(
-                  CupertinoIcons.line_horizontal_3,
-                  size: 30,
-                  color: Colors.white,
-                ),
-              ),
-              SizedBox(
-                width: MediaQuery.of(context).size.width / 3,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    InkWell(
-                      onTap: () {},
-                      child: const Icon(
-                        Icons.home,
-                        size: 30,
-                        color: Colors.white,
-                      ),
-                    ),
-                    InkWell(
-                      onTap: () {},
-                      child: const Icon(
-                        CupertinoIcons.heart_fill,
-                        size: 30,
-                        color: Colors.white,
-                      ),
-                    ),
-                    InkWell(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const SearchButtonTap()),
-                        );
-                      },
-                      child: const Icon(
-                        CupertinoIcons.search,
-                        size: 30,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              const Padding(
-                padding: EdgeInsets.only(right: 8.0),
-                child: Icon(
-                  CupertinoIcons.profile_circled,
-                  size: 30,
-                  color: Colors.white,
                 ),
               ),
             ],

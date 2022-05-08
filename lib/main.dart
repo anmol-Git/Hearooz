@@ -3,7 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:hearooz/home/main_home_page.dart';
 
 void main() {
-  SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersive);
+  // SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersive);
   runApp(const MyApp());
 }
 
@@ -17,6 +17,8 @@ class MyApp extends StatelessWidget {
       title: 'Flutter Demo',
       theme: ThemeData(
         primarySwatch: Colors.blue,
+        highlightColor: Colors.transparent,
+        splashColor: Colors.transparent,
       ),
       home: MainHomePage(),
     );
