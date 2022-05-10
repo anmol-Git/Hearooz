@@ -5,6 +5,7 @@ import 'package:hearooz/home/header_sub/circular_main_page_list_view.dart';
 import 'package:hearooz/home/header_sub/main_page_list_view.dart';
 import 'package:hearooz/home/header_sub/title_row.dart';
 import 'package:hearooz/home/main_header.dart';
+import 'package:hearooz/home/widgets/side_container.dart';
 import 'package:hearooz/utils/colors.dart';
 
 class MainHomePage extends StatefulWidget {
@@ -13,6 +14,7 @@ class MainHomePage extends StatefulWidget {
 }
 
 class _MainHomePageState extends State<MainHomePage> {
+  bool selected = false;
   @override
   void initState() {
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersive);
@@ -42,7 +44,12 @@ class _MainHomePageState extends State<MainHomePage> {
                       size: 30,
                       color: Colors.white,
                     ),
-                    onPressed: () => {},
+                    onPressed: () {
+                      print('tapped');
+                      setState(() {
+                        selected = !selected;
+                      });
+                    },
                   ),
                 ),
                 SizedBox(
@@ -78,15 +85,16 @@ class _MainHomePageState extends State<MainHomePage> {
                   ),
                 ),
                 Padding(
-                    padding: const EdgeInsets.only(right: 8.0),
-                    child: IconButton(
-                      onPressed: () {},
-                      icon: const Icon(
-                        CupertinoIcons.profile_circled,
-                        size: 30,
-                        color: Colors.white,
-                      ),
-                    )),
+                  padding: const EdgeInsets.only(right: 8.0),
+                  child: IconButton(
+                    onPressed: () {},
+                    icon: const Icon(
+                      CupertinoIcons.profile_circled,
+                      size: 30,
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
               ],
             ),
             preferredSize: const Size.fromHeight(40),
@@ -96,6 +104,91 @@ class _MainHomePageState extends State<MainHomePage> {
         body: SingleChildScrollView(
           child: Column(
             children: [
+              Container(
+                alignment: Alignment.centerLeft,
+                height: selected ? 150 : 0,
+                child: AnimatedContainer(
+                  alignment: Alignment.centerLeft,
+                  width: selected ? 200.0 : 0,
+                  duration: const Duration(milliseconds: 200),
+                  curve: Curves.fastOutSlowIn,
+                  child: GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        selected = !selected;
+                      });
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.only(left: 10.0),
+                      child: Container(
+                        alignment: Alignment.centerLeft,
+                        color: Colors.blue[700],
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Container(
+                              alignment: Alignment.centerLeft,
+                              height: 25,
+                              child: const Text(
+                                'Login',
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.w400,
+                                    fontSize: 24),
+                              ),
+                            ),
+                            const SizedBox(
+                              height: 10,
+                            ),
+                            Container(
+                              alignment: Alignment.centerLeft,
+                              height: 25,
+                              child: const Text(
+                                'HEAROOZ.de',
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.w400,
+                                    fontSize: 24),
+                              ),
+                            ),
+                            const SizedBox(
+                              height: 10,
+                            ),
+                            Container(
+                              alignment: Alignment.centerLeft,
+                              height: 25,
+                              child: const Text(
+                                'Hilfe',
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.w400,
+                                    fontSize: 24),
+                              ),
+                            ),
+                            const SizedBox(
+                              height: 10,
+                            ),
+                            Container(
+                              alignment: Alignment.centerLeft,
+                              height: 25,
+                              child: const Text(
+                                'Datenschutz',
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.w400,
+                                    fontSize: 24),
+                              ),
+                            ),
+                            const SizedBox(
+                              height: 10,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
               ClipRRect(
                 borderRadius: const BorderRadius.all(Radius.circular(10)),
                 child: Container(

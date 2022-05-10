@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hearooz/home/header_sub/media_buttons.dart';
-import 'package:hearooz/home/screens/search_button_tap.dart';
 import 'package:hearooz/utils/colors.dart';
 
 class Header extends StatelessWidget {
