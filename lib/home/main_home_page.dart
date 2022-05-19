@@ -59,6 +59,7 @@ class _MainHomePageState extends State<MainHomePage> {
                   height: 50,
                   width: MediaQuery.of(context).size.width / 3,
                   child: const TabBar(
+                    indicatorColor: Colors.transparent,
                     padding: EdgeInsets.zero,
                     indicatorPadding: EdgeInsets.zero,
                     labelPadding: EdgeInsets.zero,
