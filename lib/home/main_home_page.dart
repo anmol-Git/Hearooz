@@ -7,6 +7,7 @@ import 'package:hearooz/home/header_sub/title_row.dart';
 import 'package:hearooz/home/main_header.dart';
 import 'package:hearooz/home/widgets/heart_icon_screen.dart';
 import 'package:hearooz/home/widgets/home_icon_screen.dart';
+import 'package:hearooz/home/widgets/profile_icon.dart';
 import 'package:hearooz/home/widgets/search_icon_screen.dart';
 import 'package:hearooz/home/widgets/side_container.dart';
 import 'package:hearooz/utils/colors.dart';
@@ -27,7 +28,7 @@ class _MainHomePageState extends State<MainHomePage> {
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-      length: 3,
+      length: 4,
       child: Scaffold(
         appBar: AppBar(
           backgroundColor: Colors.blue[700],
@@ -37,65 +38,69 @@ class _MainHomePageState extends State<MainHomePage> {
           title: const Header(),
           bottom: PreferredSize(
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                Padding(
-                  padding: const EdgeInsets.only(left: 8.0),
-                  child: IconButton(
-                    icon: const Icon(
-                      CupertinoIcons.line_horizontal_3,
-                      size: 30,
-                      color: Colors.white,
+                Expanded(
+                  flex: 1,
+                  child: Container(
+                    alignment: Alignment.centerLeft,
+                    child: IconButton(
+                      icon: const Icon(
+                        CupertinoIcons.line_horizontal_3,
+                        size: 30,
+                        color: Colors.white,
+                      ),
+                      onPressed: () {
+                        print('tapped');
+                        setState(() {
+                          selected = !selected;
+                        });
+                      },
                     ),
-                    onPressed: () {
-                      print('tapped');
-                      setState(() {
-                        selected = !selected;
-                      });
-                    },
                   ),
                 ),
-                SizedBox(
-                  height: 50,
-                  width: MediaQuery.of(context).size.width / 3,
-                  child: const TabBar(
-                    indicatorColor: Colors.transparent,
-                    padding: EdgeInsets.zero,
-                    indicatorPadding: EdgeInsets.zero,
-                    labelPadding: EdgeInsets.zero,
-                    tabs: [
-                      Tab(
-                        icon: Icon(
-                          Icons.home,
-                          size: 30,
-                          color: Colors.white,
+                const Expanded(
+                  flex: 4,
+                  child: SizedBox(
+                    height: 50,
+                    child: TabBar(
+                      indicatorColor: Colors.transparent,
+                      padding: EdgeInsets.zero,
+                      indicatorPadding: EdgeInsets.zero,
+                      labelPadding: EdgeInsets.zero,
+                      tabs: [
+                        Tab(
+                          icon: Icon(
+                            Icons.home,
+                            size: 30,
+                            color: Colors.white,
+                          ),
                         ),
-                      ),
-                      Tab(
-                        icon: Icon(
-                          CupertinoIcons.heart_fill,
-                          size: 30,
-                          color: Colors.white,
+                        Tab(
+                          icon: Icon(
+                            CupertinoIcons.heart_fill,
+                            size: 30,
+                            color: Colors.white,
+                          ),
                         ),
-                      ),
-                      Tab(
-                        icon: Icon(
-                          CupertinoIcons.search,
-                          size: 30,
-                          color: Colors.white,
+                        Tab(
+                          icon: Icon(
+                            CupertinoIcons.search,
+                            size: 30,
+                            color: Colors.white,
+                          ),
                         ),
-                      ),
-                    ],
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(right: 8.0),
-                  child: IconButton(
-                    onPressed: () {},
-                    icon: const Icon(
-                      CupertinoIcons.profile_circled,
-                      size: 30,
-                      color: Colors.white,
+                        Tab(
+                          child: Padding(
+                            padding: EdgeInsets.only(left: 15.0),
+                            child: Icon(
+                              CupertinoIcons.profile_circled,
+                              size: 30,
+                              color: Colors.white,
+                            ),
+                          ),
+                        )
+                      ],
                     ),
                   ),
                 ),
@@ -200,7 +205,8 @@ class _MainHomePageState extends State<MainHomePage> {
                     children: [
                       HomeIconScreen(),
                       HeartIconScreen(),
-                      SearchIconScreen()
+                      SearchIconScreen(),
+                      ProfileScreen()
                     ]),
               )
             ],

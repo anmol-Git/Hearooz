@@ -5,36 +5,42 @@ class SearchIconScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(top: 20, left: 10, right: 10),
-      child: Container(
-        height: 500,
-        width: MediaQuery.of(context).size.width * 0.95,
-        decoration: BoxDecoration(
-            border: Border.all(
-              color: Colors.white,
-            ),
-            color: Colors.white,
-            borderRadius: const BorderRadius.all(Radius.circular(20))),
-        child: Row(children: [
-          const SizedBox(
-            width: 10,
-          ),
-          const Icon(Icons.search),
-          const SizedBox(
-            width: 10,
-          ),
-          Container(
-            width: MediaQuery.of(context).size.width * 0.80,
-            child: const TextField(
-              decoration: InputDecoration(
-                hintText: 'Enter a search term',
-                border: InputBorder.none,
+    return Column(
+      children: [
+        const SizedBox(
+          height: 30,
+        ),
+        Container(
+          decoration: BoxDecoration(
+              border: Border.all(
+                color: Colors.white,
               ),
-            ),
+              color: Colors.white,
+              borderRadius: const BorderRadius.all(Radius.circular(20))),
+          margin: const EdgeInsets.symmetric(horizontal: 8),
+          height: 50,
+          child: Row(
+            children: [
+              const SizedBox(
+                width: 15,
+              ),
+              const Icon(Icons.search, color: Colors.black),
+              const SizedBox(
+                width: 10,
+              ),
+              Container(
+                width: MediaQuery.of(context).size.width * 0.8,
+                child: const TextField(
+                  decoration: InputDecoration(
+                    hintText: 'Enter a search term',
+                    border: InputBorder.none,
+                  ),
+                ),
+              ),
+            ],
           ),
-        ]),
-      ),
+        )
+      ],
     );
   }
 }
