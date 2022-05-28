@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:hearooz/auth/login_screen.dart';
+import 'package:hearooz/auth/sign_up_screen.dart';
 import 'package:wave/config.dart';
 import 'package:wave/wave.dart';
 
@@ -82,7 +84,29 @@ class HeartIconScreen extends StatelessWidget {
                           style: ButtonStyle(
                               backgroundColor: MaterialStateProperty.all(
                                   const Color(0xFF4a95fa))),
-                          onPressed: () {},
+                          onPressed: () {
+                            Navigator.push(
+                                context,
+                                PageRouteBuilder(
+                                    transitionDuration:
+                                        const Duration(milliseconds: 400),
+                                    transitionsBuilder: (BuildContext context,
+                                        animation, secAnimation, child) {
+                                      animation = CurvedAnimation(
+                                          parent: animation,
+                                          curve: Curves.bounceIn);
+
+                                      return ScaleTransition(
+                                        scale: animation,
+                                        alignment: Alignment.bottomCenter,
+                                        child: child,
+                                      );
+                                    },
+                                    pageBuilder: ((context, animation,
+                                        secondaryAnimation) {
+                                      return const SignUpScreen();
+                                    })));
+                          },
                           child: const Text(
                             'Kostenlos registrieren',
                             style: TextStyle(
@@ -105,17 +129,42 @@ class HeartIconScreen extends StatelessWidget {
                         color: Color(0xFFafa278),
                       ),
                     )),
-                const Positioned(
+                Positioned(
                     width: 80,
                     top: 220,
                     right: 68,
-                    child: Text(
-                      'Zum login!',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                        color: Color(0xFF96906f),
+                    child: InkWell(
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            PageRouteBuilder(
+                                transitionDuration:
+                                    const Duration(milliseconds: 400),
+                                transitionsBuilder: (BuildContext context,
+                                    animation, secAnimation, child) {
+                                  animation = CurvedAnimation(
+                                      parent: animation,
+                                      curve: Curves.bounceIn);
+
+                                  return ScaleTransition(
+                                    scale: animation,
+                                    alignment: Alignment.bottomCenter,
+                                    child: child,
+                                  );
+                                },
+                                pageBuilder:
+                                    ((context, animation, secondaryAnimation) {
+                                  return const LoginScreen();
+                                })));
+                      },
+                      child: const Text(
+                        'Zum login!',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          color: Color(0xFF96906f),
+                        ),
                       ),
                     )),
               ],
