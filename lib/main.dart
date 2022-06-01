@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hearooz/home/main_home_page.dart';
+import 'package:hearooz/splash_screen.dart';
 
 void main() {
   // SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersive);
@@ -20,7 +21,7 @@ class MyApp extends StatelessWidget {
         highlightColor: Colors.transparent,
         splashColor: Colors.transparent,
       ),
-      home: MainHomePage(),
+      home: const SplashScreen(),
     );
   }
 }

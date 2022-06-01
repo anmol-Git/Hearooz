@@ -14,12 +14,21 @@ class SignUpScreen extends StatefulWidget {
 }
 
 class _SignUpScreenState extends State<SignUpScreen> {
-  bool rememberMe = false;
+  bool isChecked = false;
 
   void _onChange(bool? newValue) => setState(() {
-        rememberMe = !rememberMe;
+        isChecked = !isChecked;
       });
+  bool isChecked2 = false;
 
+  void _onChange2(bool? newValue) => setState(() {
+        isChecked2 = !isChecked2;
+      });
+  bool isChecked3 = false;
+
+  void _onChange3(bool? newValue) => setState(() {
+        isChecked3 = !isChecked3;
+      });
   @override
   Widget build(BuildContext context) {
     Color greyColor = const Color(0xff4c504f);
@@ -100,7 +109,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       const SizedBox(
                         width: 20,
                       ),
-                      Checkbox(value: rememberMe, onChanged: _onChange),
+                      Checkbox(value: isChecked, onChanged: _onChange),
                       Row(
                         children: [
                           Text(
@@ -130,7 +139,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       const SizedBox(
                         width: 20,
                       ),
-                      Checkbox(value: rememberMe, onChanged: _onChange),
+                      Checkbox(value: isChecked2, onChanged: _onChange2),
                       Row(
                         children: [
                           Text(
@@ -160,7 +169,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       const SizedBox(
                         width: 20,
                       ),
-                      Checkbox(value: rememberMe, onChanged: _onChange),
+                      Checkbox(value: isChecked3, onChanged: _onChange3),
                       Row(
                         children: [
                           Text(
