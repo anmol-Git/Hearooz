@@ -1,11 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:hearooz/auth/login_screen.dart';
 import 'package:hearooz/home/main_header.dart';
 import 'package:hearooz/home/widgets/heart_icon_screen.dart';
 import 'package:hearooz/home/widgets/home_icon_screen.dart';
 import 'package:hearooz/home/widgets/profile_icon.dart';
 import 'package:hearooz/home/widgets/search_icon_screen.dart';
+import 'package:url_launcher/link.dart';
 
 class MainHomePage extends StatefulWidget {
   @override
@@ -198,21 +200,21 @@ class _MainHomePageState extends State<MainHomePage>
                   width: selected ? 200.0 : 0,
                   duration: const Duration(milliseconds: 200),
                   curve: Curves.fastOutSlowIn,
-                  child: GestureDetector(
-                    onTap: () {
-                      setState(() {
-                        selected = !selected;
-                      });
-                    },
-                    child: Padding(
-                      padding: const EdgeInsets.only(left: 10.0),
-                      child: Container(
-                        alignment: Alignment.centerLeft,
-                        color: Colors.blue[700],
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            Container(
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 10.0),
+                    child: Container(
+                      alignment: Alignment.centerLeft,
+                      color: Colors.blue[700],
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          GestureDetector(
+                            onTap: () {
+                              Navigator.of(context).push(MaterialPageRoute(
+                                  builder: (BuildContext context) =>
+                                      const LoginScreen()));
+                            },
+                            child: Container(
                               alignment: Alignment.centerLeft,
                               height: 25,
                               child: const Text(
@@ -223,53 +225,79 @@ class _MainHomePageState extends State<MainHomePage>
                                     fontSize: 24),
                               ),
                             ),
-                            const SizedBox(
-                              height: 10,
-                            ),
-                            Container(
-                              alignment: Alignment.centerLeft,
-                              height: 25,
-                              child: const Text(
-                                'HEAROOZ.de',
-                                style: TextStyle(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.w400,
-                                    fontSize: 24),
+                          ),
+                          const SizedBox(
+                            height: 10,
+                          ),
+                          Link(
+                            uri: Uri.parse('https://www.hearooz.de/'),
+                            builder: (BuildContext context,
+                                Future<void> Function()? followLink) {
+                              return GestureDetector(
+                                onTap: followLink,
+                                child: Container(
+                                  alignment: Alignment.centerLeft,
+                                  height: 25,
+                                  child: const Text(
+                                    'HEAROOZ.de',
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.w400,
+                                        fontSize: 24),
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
+                          const SizedBox(
+                            height: 10,
+                          ),
+                          Link(
+                            uri: Uri.parse('https://www.hearooz.de/support'),
+                            builder: (BuildContext context,
+                                    Future<void> Function()? followLink) =>
+                                GestureDetector(
+                              onTap: followLink,
+                              child: Container(
+                                alignment: Alignment.centerLeft,
+                                height: 25,
+                                child: const Text(
+                                  'Hilfe',
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.w400,
+                                      fontSize: 24),
+                                ),
                               ),
                             ),
-                            const SizedBox(
-                              height: 10,
-                            ),
-                            Container(
-                              alignment: Alignment.centerLeft,
-                              height: 25,
-                              child: const Text(
-                                'Hilfe',
-                                style: TextStyle(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.w400,
-                                    fontSize: 24),
+                          ),
+                          const SizedBox(
+                            height: 10,
+                          ),
+                          Link(
+                            uri: Uri.parse(
+                                'https://www.hearooz.de/datenschutzerklarung-app'),
+                            builder: (BuildContext context,
+                                    Future<void> Function()? followLink) =>
+                                GestureDetector(
+                              onTap: followLink,
+                              child: Container(
+                                alignment: Alignment.centerLeft,
+                                height: 25,
+                                child: const Text(
+                                  'Datenschutz',
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.w400,
+                                      fontSize: 24),
+                                ),
                               ),
                             ),
-                            const SizedBox(
-                              height: 10,
-                            ),
-                            Container(
-                              alignment: Alignment.centerLeft,
-                              height: 25,
-                              child: const Text(
-                                'Datenschutz',
-                                style: TextStyle(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.w400,
-                                    fontSize: 24),
-                              ),
-                            ),
-                            const SizedBox(
-                              height: 10,
-                            ),
-                          ],
-                        ),
+                          ),
+                          const SizedBox(
+                            height: 10,
+                          ),
+                        ],
                       ),
                     ),
                   ),
