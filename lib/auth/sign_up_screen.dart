@@ -1,7 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/foundation/key.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:hearooz/auth/login_screen.dart';
 import 'package:wave/config.dart';
 import 'package:wave/wave.dart';
@@ -35,7 +33,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
     Color lightGreyColor = const Color(0xff8b8c90);
     return Scaffold(
       body: SingleChildScrollView(
-        child: Container(
+        child: SizedBox(
           height: MediaQuery.of(context).size.height,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -239,7 +237,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   )
                 ],
               ),
-              Container(
+              SizedBox(
                 height: 200,
                 child: WaveWidget(
                   config: CustomConfig(

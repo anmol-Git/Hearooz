@@ -28,7 +28,7 @@ class SearchIconScreen extends StatelessWidget {
               const SizedBox(
                 width: 10,
               ),
-              Container(
+              SizedBox(
                 width: MediaQuery.of(context).size.width * 0.8,
                 child: const TextField(
                   decoration: InputDecoration(

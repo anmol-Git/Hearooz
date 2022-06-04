@@ -10,6 +10,8 @@ import 'package:hearooz/home/widgets/search_icon_screen.dart';
 import 'package:url_launcher/link.dart';
 
 class MainHomePage extends StatefulWidget {
+  const MainHomePage({Key? key}) : super(key: key);
+
   @override
   State<MainHomePage> createState() => _MainHomePageState();
 }
@@ -115,7 +117,6 @@ class _MainHomePageState extends State<MainHomePage>
                         color: Colors.white,
                       ),
                       onPressed: () {
-                        print('tapped');
                         setState(() {
                           selected = !selected;
                         });
@@ -303,7 +304,7 @@ class _MainHomePageState extends State<MainHomePage>
                   ),
                 ),
               ),
-              Container(
+              SizedBox(
                 height: 700,
                 child: TabBarView(
                     controller: _tabController,

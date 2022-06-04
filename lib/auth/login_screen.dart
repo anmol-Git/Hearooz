@@ -1,7 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/foundation/key.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:hearooz/auth/sign_up_screen.dart';
 import 'package:wave/config.dart';
 import 'package:wave/wave.dart';
@@ -16,7 +14,7 @@ class LoginScreen extends StatelessWidget {
 
     return Scaffold(
         backgroundColor: Colors.white,
-        body: Container(
+        body: SizedBox(
           height: MediaQuery.of(context).size.height,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -137,7 +135,7 @@ class LoginScreen extends StatelessWidget {
                   )
                 ],
               ),
-              Container(
+              SizedBox(
                 height: 200,
                 child: WaveWidget(
                   config: CustomConfig(

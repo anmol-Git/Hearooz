@@ -1,3 +1,5 @@
+// ignore_for_file: use_key_in_widget_constructors
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hearooz/utils/colors.dart';
@@ -24,8 +26,8 @@ class _SplashScreenState extends State<SplashScreen>
         curve: Curves.bounceOut, parent: _homeAnimationController));
     _homeAnimationController.forward();
     Future.delayed(const Duration(seconds: 4), () {
-      Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: (BuildContext context) => MainHomePage()));
+      Navigator.of(context).pushReplacement(MaterialPageRoute(
+          builder: (BuildContext context) => const MainHomePage()));
     });
     super.initState();
   }

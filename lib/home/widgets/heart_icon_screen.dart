@@ -45,7 +45,7 @@ class HeartIconScreen extends StatelessWidget {
           const SizedBox(
             height: 180,
           ),
-          Container(
+          SizedBox(
             height: 420,
             child: Stack(
               children: [
