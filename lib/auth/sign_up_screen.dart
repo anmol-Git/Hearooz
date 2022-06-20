@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hearooz/auth/login_screen.dart';
+import 'package:hearooz/auth/otp_validation_screen.dart';
 import 'package:wave/config.dart';
 import 'package:wave/wave.dart';
 
@@ -13,6 +14,15 @@ class SignUpScreen extends StatefulWidget {
 
 class _SignUpScreenState extends State<SignUpScreen> {
   bool isChecked = false;
+
+  final myController = TextEditingController();
+
+  @override
+  void dispose() {
+    // Clean up the controller when the widget is disposed.
+    myController.dispose();
+    super.dispose();
+  }
 
   void _onChange(bool? newValue) => setState(() {
         isChecked = !isChecked;
@@ -73,6 +83,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       horizontal: 15.0,
                     ),
                     child: TextField(
+                      controller: myController,
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         fontSize: 22,
@@ -191,11 +202,23 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         border: Border.all(
                           color: lightGreyColor,
                         ),
-                        color: lightGreyColor,
+                        color: isChecked && isChecked2
+                            ? Colors.blue
+                            : lightGreyColor,
                         borderRadius:
                             const BorderRadius.all(Radius.circular(20))),
                     child: TextButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          if (isChecked && isChecked2) {
+                            //*the api call to register a user
+                            Navigator.of(context).pushReplacement(
+                                MaterialPageRoute(
+                                    builder: (BuildContext context) =>
+                                        OTPValidationScreen(
+                                          email: myController.text,
+                                        )));
+                          }
+                        },
                         child: const Text(
                           'Los geht\'s!',
                           style: TextStyle(

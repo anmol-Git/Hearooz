@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hearooz/auth/sign_up_screen.dart';
 import 'package:wave/config.dart';
 import 'package:wave/wave.dart';
 
@@ -67,7 +68,7 @@ class ProfileScreen extends StatelessWidget {
                               },
                               pageBuilder:
                                   ((context, animation, secondaryAnimation) {
-                                return const LoginScreen();
+                                return const SignUpScreen();
                               })));
                     },
                     child: const Text(
