@@ -1,7 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:hearooz/home/widgets/profile_icon.dart';
 import 'package:wave/config.dart';
 import 'package:wave/wave.dart';
 

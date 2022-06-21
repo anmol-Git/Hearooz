@@ -3,7 +3,7 @@ import 'package:hearooz/auth/sign_up_screen.dart';
 import 'package:wave/config.dart';
 import 'package:wave/wave.dart';
 
-import '../../auth/login_screen.dart';
+import '../../../auth/login_screen.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({Key? key}) : super(key: key);

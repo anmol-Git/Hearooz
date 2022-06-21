@@ -5,7 +5,7 @@ import 'package:hearooz/auth/login_screen.dart';
 import 'package:hearooz/home/main_header.dart';
 import 'package:hearooz/home/widgets/heart_icon_screen.dart';
 import 'package:hearooz/home/widgets/home_icon_screen.dart';
-import 'package:hearooz/home/widgets/profile_icon.dart';
+import 'package:hearooz/home/widgets/profile/profile_icon.dart';
 import 'package:hearooz/home/widgets/search_icon_screen.dart';
 import 'package:url_launcher/link.dart';
 

@@ -6,14 +6,13 @@ import 'package:wave/config.dart';
 import 'package:wave/wave.dart';
 
 class OTPValidationScreen extends StatelessWidget {
-  String? email;
-  OTPValidationScreen({Key? key, required this.email}) : super(key: key);
+  final String? email;
+  const OTPValidationScreen({Key? key, required this.email}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     Color greyColor = const Color(0xff4c504f);
     Color lightGreyColor = const Color(0xff8b8c90);
-    String otp = "LVODS";
     String a = '';
     String b = '';
     String c = '';
@@ -187,6 +186,7 @@ class OTPValidationScreen extends StatelessWidget {
                                 if (val.length == 1) {
                                   e = val.toString();
                                   String input = a + b + c + d + e;
+                                  print(input);
                                   //* have to implement the otp verification
                                   Navigator.of(context).pushReplacement(
                                       MaterialPageRoute(
