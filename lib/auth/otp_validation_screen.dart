@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:hearooz/auth/auth_verification.dart';
 import 'package:wave/config.dart';
 import 'package:wave/wave.dart';
 
@@ -187,7 +188,10 @@ class OTPValidationScreen extends StatelessWidget {
                                   e = val.toString();
                                   String input = a + b + c + d + e;
                                   //* have to implement the otp verification
-                                  FocusScope.of(context).nextFocus();
+                                  Navigator.of(context).pushReplacement(
+                                      MaterialPageRoute(
+                                          builder: (BuildContext context) =>
+                                              const AuthVerification()));
                                 }
                               },
                               inputFormatters: [
