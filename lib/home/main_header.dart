@@ -1,10 +1,70 @@
+import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hearooz/home/header_sub/media_buttons.dart';
-import 'package:hearooz/utils/colors.dart';
 
-class Header extends StatelessWidget {
+class Header extends StatefulWidget {
   const Header({Key? key}) : super(key: key);
+
+  @override
+  State<Header> createState() => _HeaderState();
+}
+
+class _HeaderState extends State<Header> {
+  final audioPlayer = AudioPlayer();
+  bool isPlaying = false;
+  Duration duration = Duration.zero;
+  Duration position = Duration.zero;
+  String url = "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3";
+
+  @override
+  void initState() {
+    super.initState();
+
+    setAudio();
+    audioPlayer.onPlayerStateChanged.listen((event) {
+      setState(() {
+        isPlaying = event == PlayerState.PLAYING;
+      });
+    });
+
+    audioPlayer.onDurationChanged.listen((newDuration) {
+      setState(() {
+        duration = newDuration;
+      });
+    });
+
+    audioPlayer.onAudioPositionChanged.listen((newPosition) {
+      setState(() {
+        position = newPosition;
+      });
+    });
+  }
+
+  String formatTime(Duration duration) {
+    String twoDigit(int n) => n.toString().padLeft(2, '0');
+    final hours = twoDigit(duration.inHours);
+    final minutes = twoDigit(duration.inMinutes.remainder(60));
+    final seconds = twoDigit(duration.inSeconds.remainder(60));
+
+    return [
+      if (duration.inHours > 0) hours,
+      minutes,
+      seconds,
+    ].join(':');
+  }
+
+  Future setAudio() async {
+    audioPlayer.setReleaseMode(ReleaseMode.LOOP);
+
+    audioPlayer.setUrl(url);
+  }
+
+  @override
+  void dispose() {
+    audioPlayer.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -33,20 +93,54 @@ class Header extends StatelessWidget {
                 height: 40,
                 width: 40,
               ),
-              const MediaButton(
-                icon: CupertinoIcons.refresh_bold,
-                height: 40,
-                width: 40,
+              CircleAvatar(
+                backgroundColor: Colors.white,
+                radius: 25,
+                child: IconButton(
+                  icon: const Icon(
+                    CupertinoIcons.refresh_bold,
+                  ),
+                  iconSize: 30,
+                  onPressed: () async {
+                    if (position.inSeconds - 15 > 0) {
+                      await audioPlayer
+                          .seek(Duration(seconds: position.inSeconds - 15));
+                    }
+                  },
+                ),
               ),
-              const MediaButton(
-                icon: CupertinoIcons.play_arrow_solid,
-                height: 50,
-                width: 50,
+              CircleAvatar(
+                backgroundColor: Colors.white,
+                radius: 30,
+                child: IconButton(
+                  icon: Icon(
+                    isPlaying ? Icons.pause : Icons.play_arrow,
+                  ),
+                  iconSize: 40,
+                  onPressed: () async {
+                    if (isPlaying) {
+                      await audioPlayer.pause();
+                    } else {
+                      await audioPlayer.resume();
+                    }
+                  },
+                ),
               ),
-              const MediaButton(
-                icon: CupertinoIcons.refresh_thin,
-                height: 40,
-                width: 40,
+              CircleAvatar(
+                backgroundColor: Colors.white,
+                radius: 25,
+                child: IconButton(
+                  icon: const Icon(
+                    CupertinoIcons.refresh_thin,
+                  ),
+                  iconSize: 30,
+                  onPressed: () async {
+                    if (position.inSeconds + 15 < duration.inSeconds) {
+                      await audioPlayer
+                          .seek(Duration(seconds: position.inSeconds + 15));
+                    }
+                  },
+                ),
               ),
             ],
           ),
@@ -54,29 +148,39 @@ class Header extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Container(
-                width: MediaQuery.of(context).size.width / 2,
+                height: 14,
+                margin: const EdgeInsets.only(top: 20),
+                width: MediaQuery.of(context).size.width * 0.7,
                 alignment: Alignment.topCenter,
-                margin: const EdgeInsets.only(top: 15),
-                child: const LinearProgressIndicator(
-                  minHeight: 8,
-                  value: 0.3,
-                  valueColor:
-                      AlwaysStoppedAnimation<Color>(MyColor.yellowSplashColor),
-                  backgroundColor: Colors.blue,
+                child: SliderTheme(
+                  data: SliderTheme.of(context).copyWith(
+                      trackHeight: 10,
+                      overlayColor: Colors.transparent,
+                      thumbColor: Colors.transparent,
+                      activeTrackColor: Colors.yellow,
+                      thumbShape:
+                          const RoundSliderThumbShape(enabledThumbRadius: 0.0)),
+                  child: Slider(
+                    thumbColor: Colors.white,
+                    min: 0,
+                    max: duration.inSeconds.toDouble(),
+                    value: position.inSeconds.toDouble(),
+                    onChanged: (val) async {
+                      final position = Duration(seconds: val.toInt());
+                      await audioPlayer.seek(position);
+
+                      await audioPlayer.resume();
+                    },
+                  ),
                 ),
               ),
-              const SizedBox(
-                width: 10,
-              ),
-              const Padding(
-                padding: EdgeInsets.only(top: 8.0),
-                child: Text(
-                  '00:00',
-                  style: TextStyle(
-                    fontSize: 18,
-                    color: Colors.white,
-                    fontWeight: FontWeight.w600,
-                  ),
+              Padding(
+                padding: const EdgeInsets.only(top: 20),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(formatTime(position)),
+                  ],
                 ),
               ),
             ],

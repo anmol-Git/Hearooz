@@ -16,20 +16,26 @@ class _SplashScreenState extends State<SplashScreen>
     with SingleTickerProviderStateMixin {
   late AnimationController _homeAnimationController;
   late Animation _homeAnimation;
-
+  double height = 150;
+  double width = 150;
   @override
   void initState() {
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersive);
-    _homeAnimationController = AnimationController(
-        vsync: this, duration: const Duration(milliseconds: 80));
-    _homeAnimation = Tween(begin: 150.0, end: 80.0).animate(CurvedAnimation(
-        curve: Curves.bounceOut, parent: _homeAnimationController));
-    _homeAnimationController.forward();
-    Future.delayed(const Duration(seconds: 4), () {
-      Navigator.of(context).pushReplacement(MaterialPageRoute(
-          builder: (BuildContext context) => const MainHomePage()));
-    });
+    setheight();
     super.initState();
+  }
+
+  void setheight() {
+    Future.delayed(const Duration(milliseconds: 100), () {
+      setState(() {
+        height = 80;
+        width = 80;
+      });
+      Future.delayed(const Duration(milliseconds: 700), () {
+        Navigator.of(context).pushReplacement(
+            MaterialPageRoute(builder: (context) => const MainHomePage()));
+      });
+    });
   }
 
   @override
@@ -43,9 +49,9 @@ class _SplashScreenState extends State<SplashScreen>
             Container(
               alignment: Alignment.center,
               child: AnimatedContainer(
-                height: _homeAnimation.value,
-                width: _homeAnimation.value,
                 duration: const Duration(seconds: 2),
+                height: height,
+                width: width,
                 child: Image.asset(
                   'assets/chimp.png',
                 ),
