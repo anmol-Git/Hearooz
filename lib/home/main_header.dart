@@ -179,7 +179,7 @@ class _HeaderState extends State<Header> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(formatTime(position)),
+                    Text(formatTime(duration - position)),
                   ],
                 ),
               ),

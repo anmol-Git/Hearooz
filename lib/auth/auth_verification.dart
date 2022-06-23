@@ -1,5 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:hearooz/providers/profile_screen_provider.dart';
+import 'package:provider/provider.dart';
 import 'package:wave/config.dart';
 import 'package:wave/wave.dart';
 
@@ -8,6 +10,8 @@ class AuthVerification extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var profileScreenProvider = Provider.of<ProfileScreenProvider>(context);
+
     Color greyColor = const Color(0xff4c504f);
     Color greenishBlueColor = const Color(0xff44d3b6);
     Color lightGreyColor = const Color(0xff8b8c90);
@@ -63,13 +67,15 @@ class AuthVerification extends StatelessWidget {
                       height: 60,
                       decoration: BoxDecoration(
                           border: Border.all(
-                            color: lightGreyColor,
+                            color: Colors.blue,
                           ),
                           color: Colors.blue,
                           borderRadius:
                               const BorderRadius.all(Radius.circular(20))),
                       child: TextButton(
                           onPressed: () {
+                            profileScreenProvider.verfied();
+                            print(profileScreenProvider.isVerfied);
                             Navigator.of(context).pop();
                           },
                           child: const Text(
