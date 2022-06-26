@@ -1,6 +1,9 @@
-import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:hearooz/audio/notifiers/play_button_notifier.dart';
+import 'package:hearooz/audio/notifiers/progress_notifier.dart';
+import 'package:hearooz/audio/page_manager.dart';
+import 'package:hearooz/audio/services/service_locator.dart';
 import 'package:hearooz/home/header_sub/media_buttons.dart';
 
 class Header extends StatefulWidget {
@@ -11,34 +14,34 @@ class Header extends StatefulWidget {
 }
 
 class _HeaderState extends State<Header> {
-  final audioPlayer = AudioPlayer();
-  bool isPlaying = false;
-  Duration duration = Duration.zero;
-  Duration position = Duration.zero;
+  // final audioPlayer = AudioPlayer();
+  // bool isPlaying = false;
+  // Duration duration = Duration.zero;
+  // Duration position = Duration.zero;
   String url = "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3";
 
   @override
   void initState() {
     super.initState();
+    getIt<PageManager>().init();
+    // setAudio();
+    // audioPlayer.onPlayerStateChanged.listen((event) {
+    //   setState(() {
+    //     isPlaying = event == PlayerState.PLAYING;
+    //   });
+    // });
 
-    setAudio();
-    audioPlayer.onPlayerStateChanged.listen((event) {
-      setState(() {
-        isPlaying = event == PlayerState.PLAYING;
-      });
-    });
+    // audioPlayer.onDurationChanged.listen((newDuration) {
+    //   setState(() {
+    //     duration = newDuration;
+    //   });
+    // });
 
-    audioPlayer.onDurationChanged.listen((newDuration) {
-      setState(() {
-        duration = newDuration;
-      });
-    });
-
-    audioPlayer.onAudioPositionChanged.listen((newPosition) {
-      setState(() {
-        position = newPosition;
-      });
-    });
+    // audioPlayer.onAudioPositionChanged.listen((newPosition) {
+    //   setState(() {
+    //     position = newPosition;
+    //   });
+    // });
   }
 
   String formatTime(Duration duration) {
@@ -55,19 +58,21 @@ class _HeaderState extends State<Header> {
   }
 
   Future setAudio() async {
-    audioPlayer.setReleaseMode(ReleaseMode.LOOP);
+    //  audioPlayer.setReleaseMode(ReleaseMode.LOOP);
 
-    audioPlayer.setUrl(url);
+    //audioPlayer.setUrl(url);
   }
 
   @override
   void dispose() {
-    audioPlayer.dispose();
+    //audioPlayer.dispose();
+    getIt<PageManager>().dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    final pageManager = getIt<PageManager>();
     return Container(
       height: 150,
       color: Colors.blue[700],
@@ -96,93 +101,141 @@ class _HeaderState extends State<Header> {
               CircleAvatar(
                 backgroundColor: Colors.white,
                 radius: 25,
-                child: IconButton(
-                  icon: const Icon(
-                    CupertinoIcons.refresh_bold,
-                  ),
-                  iconSize: 30,
-                  onPressed: () async {
-                    if (position.inSeconds - 15 > 0) {
-                      await audioPlayer
-                          .seek(Duration(seconds: position.inSeconds - 15));
-                    }
-                  },
-                ),
+                child: ValueListenableBuilder<ProgressBarState>(
+                    valueListenable: pageManager.progressNotifier,
+                    builder: (_, value, __) {
+                      return IconButton(
+                        icon: const Icon(
+                          CupertinoIcons.refresh_bold,
+                        ),
+                        iconSize: 30,
+                        onPressed: () async {
+                          if (value.current.inSeconds - 15 > 0) {
+                            pageManager.seek(Duration(
+                                seconds: value.current.inSeconds - 15));
+                          }
+                        },
+                      );
+                    }),
               ),
-              CircleAvatar(
-                backgroundColor: Colors.white,
-                radius: 30,
-                child: IconButton(
-                  icon: Icon(
-                    isPlaying ? Icons.pause : Icons.play_arrow,
-                  ),
-                  iconSize: 40,
-                  onPressed: () async {
-                    if (isPlaying) {
-                      await audioPlayer.pause();
-                    } else {
-                      await audioPlayer.resume();
+              ValueListenableBuilder<ButtonState>(
+                  valueListenable: pageManager.playButtonNotifier,
+                  builder: (_, value, __) {
+                    switch (value) {
+                      case ButtonState.loading:
+                        return Container(
+                          margin: const EdgeInsets.all(8.0),
+                          width: 32.0,
+                          height: 32.0,
+                          child: const CircularProgressIndicator(),
+                        );
+                      case ButtonState.paused:
+                        return CircleAvatar(
+                          backgroundColor: Colors.white,
+                          radius: 30,
+                          child: IconButton(
+                            icon: const Icon(
+                              Icons.play_arrow,
+                            ),
+                            iconSize: 40,
+                            onPressed: () async {
+                              pageManager.stop();
+                              pageManager.remove();
+                              pageManager.add(url, 'Shinzou Wo Sasageyo',
+                                  'Attack on titan');
+                              print('in here!');
+                              pageManager.play();
+                            },
+                          ),
+                        );
+                      case ButtonState.playing:
+                        return CircleAvatar(
+                          backgroundColor: Colors.white,
+                          radius: 30,
+                          child: IconButton(
+                            icon: const Icon(
+                              Icons.pause,
+                            ),
+                            iconSize: 40,
+                            onPressed: () async {
+                              pageManager.pause();
+                            },
+                          ),
+                        );
                     }
-                  },
-                ),
-              ),
-              CircleAvatar(
-                backgroundColor: Colors.white,
-                radius: 25,
-                child: IconButton(
-                  icon: const Icon(
-                    CupertinoIcons.refresh_thin,
-                  ),
-                  iconSize: 30,
-                  onPressed: () async {
-                    if (position.inSeconds + 15 < duration.inSeconds) {
-                      await audioPlayer
-                          .seek(Duration(seconds: position.inSeconds + 15));
-                    }
-                  },
-                ),
-              ),
+                  }),
+              ValueListenableBuilder<ProgressBarState>(
+                  valueListenable: pageManager.progressNotifier,
+                  builder: (_, value, __) {
+                    return CircleAvatar(
+                      backgroundColor: Colors.white,
+                      radius: 25,
+                      child: IconButton(
+                        icon: const Icon(
+                          CupertinoIcons.refresh_thin,
+                        ),
+                        iconSize: 30,
+                        onPressed: () async {
+                          if (value.current.inSeconds + 15 <
+                              value.total.inSeconds) {
+                            pageManager.seek(Duration(
+                                seconds: value.current.inSeconds + 15));
+                          }
+                        },
+                      ),
+                    );
+                  }),
             ],
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Container(
-                height: 14,
-                margin: const EdgeInsets.only(top: 20),
-                width: MediaQuery.of(context).size.width * 0.7,
-                alignment: Alignment.topCenter,
-                child: SliderTheme(
-                  data: SliderTheme.of(context).copyWith(
-                      trackHeight: 10,
-                      overlayColor: Colors.transparent,
-                      thumbColor: Colors.transparent,
-                      activeTrackColor: Colors.yellow,
-                      thumbShape:
-                          const RoundSliderThumbShape(enabledThumbRadius: 0.0)),
-                  child: Slider(
-                    thumbColor: Colors.white,
-                    min: 0,
-                    max: duration.inSeconds.toDouble(),
-                    value: position.inSeconds.toDouble(),
-                    onChanged: (val) async {
-                      final position = Duration(seconds: val.toInt());
-                      await audioPlayer.seek(position);
-
-                      await audioPlayer.resume();
-                    },
-                  ),
-                ),
+              ValueListenableBuilder<ProgressBarState>(
+                valueListenable: pageManager.progressNotifier,
+                builder: (_, value, __) {
+                  return Container(
+                    height: 14,
+                    margin: const EdgeInsets.only(top: 20),
+                    width: MediaQuery.of(context).size.width * 0.7,
+                    alignment: Alignment.topCenter,
+                    child: SliderTheme(
+                      data: SliderTheme.of(context).copyWith(
+                          trackHeight: 10,
+                          overlayColor: Colors.transparent,
+                          thumbColor: Colors.transparent,
+                          activeTrackColor: Colors.yellow,
+                          thumbShape: const RoundSliderThumbShape(
+                              enabledThumbRadius: 0.0)),
+                      child: Slider(
+                        thumbColor: Colors.white,
+                        min: 0,
+                        max: value.total.inSeconds.toDouble(),
+                        value: value.current.inSeconds.toDouble(),
+                        onChanged: (val) async {
+                          final position = Duration(seconds: val.toInt());
+                          if (position < value.total &&
+                              position > Duration.zero) {
+                            pageManager.seek(position);
+                          }
+                        },
+                      ),
+                    ),
+                  );
+                },
               ),
-              Padding(
-                padding: const EdgeInsets.only(top: 20),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(formatTime(duration - position)),
-                  ],
-                ),
-              ),
+              ValueListenableBuilder<ProgressBarState>(
+                  valueListenable: pageManager.progressNotifier,
+                  builder: (_, value, __) {
+                    return Padding(
+                      padding: const EdgeInsets.only(top: 20),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(formatTime(value.total - value.current)),
+                        ],
+                      ),
+                    );
+                  }),
             ],
           ),
         ],

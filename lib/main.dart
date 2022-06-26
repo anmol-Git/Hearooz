@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:hearooz/audio/services/service_locator.dart';
 import 'package:hearooz/providers/profile_screen_provider.dart';
 import 'package:hearooz/splash_screen.dart';
 import 'package:provider/provider.dart';
 
-void main() {
+void main() async {
   // SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersive);
+
+  await setupServiceLocator();
   runApp(const MyApp());
 }
 

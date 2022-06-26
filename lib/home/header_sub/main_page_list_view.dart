@@ -15,10 +15,13 @@ class MainPageListView extends StatelessWidget {
             padding: const EdgeInsets.all(8.0),
             child: ClipRRect(
               borderRadius: const BorderRadius.all(Radius.circular(5)),
-              child: Container(
-                height: 150,
-                width: 150,
-                color: Colors.pink,
+              child: InkWell(
+                onTap: () {},
+                child: Container(
+                  height: 150,
+                  width: 150,
+                  color: Colors.pink,
+                ),
               ),
             ),
           );
