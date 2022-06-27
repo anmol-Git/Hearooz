@@ -2,12 +2,31 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hearooz/auth/auth_verification.dart';
+import 'package:hearooz/providers/api_registration_provider.dart';
+import 'package:hearooz/providers/user_registration.dart';
+import 'package:provider/provider.dart';
+import 'package:toast/toast.dart';
 import 'package:wave/config.dart';
 import 'package:wave/wave.dart';
 
-class OTPValidationScreen extends StatelessWidget {
+class OTPValidationScreen extends StatefulWidget {
   final String? email;
   const OTPValidationScreen({Key? key, required this.email}) : super(key: key);
+
+  @override
+  State<OTPValidationScreen> createState() => _OTPValidationScreenState();
+}
+
+class _OTPValidationScreenState extends State<OTPValidationScreen> {
+  late UserRegistrationProvider provider;
+
+  @override
+  void initState() {
+    Future.delayed(const Duration(milliseconds: 100), () {
+      provider = Provider.of<UserRegistrationProvider>(context, listen: false);
+    });
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -68,7 +87,7 @@ class OTPValidationScreen extends StatelessWidget {
                       height: 4,
                     ),
                     Text(
-                      email.toString(),
+                      widget.email.toString(),
                       style: TextStyle(
                         color: greyColor,
                         fontSize: 21,
@@ -176,28 +195,43 @@ class OTPValidationScreen extends StatelessWidget {
                           SizedBox(
                             height: 68,
                             width: 64,
-                            child: TextFormField(
-                              style: const TextStyle(
-                                  fontSize: 22,
-                                  color: Colors.blue,
-                                  fontWeight: FontWeight.bold),
-                              textAlign: TextAlign.center,
-                              onChanged: (val) {
-                                if (val.length == 1) {
-                                  e = val.toString();
-                                  String input = a + b + c + d + e;
-                                  print(input);
-                                  //* have to implement the otp verification
-                                  Navigator.of(context).pushReplacement(
-                                      MaterialPageRoute(
-                                          builder: (BuildContext context) =>
-                                              const AuthVerification()));
-                                }
-                              },
-                              inputFormatters: [
-                                LengthLimitingTextInputFormatter(1),
-                              ],
-                            ),
+                            child: Consumer<ApiRegistrationProvider>(
+                                builder: (context, value, child) {
+                              return TextFormField(
+                                style: const TextStyle(
+                                    fontSize: 22,
+                                    color: Colors.blue,
+                                    fontWeight: FontWeight.bold),
+                                textAlign: TextAlign.center,
+                                onChanged: (val) async {
+                                  if (val.length == 1) {
+                                    e = val.toString();
+                                    String input = a + b + c + d + e;
+                                    print(input);
+
+                                    int response = await provider.verifyUser(
+                                        widget.email ?? '',
+                                        input,
+                                        value.anonAuthToken);
+
+                                    if (response == 200) {
+                                      Navigator.of(context).pushReplacement(
+                                          MaterialPageRoute(
+                                              builder: (BuildContext context) =>
+                                                  const AuthVerification()));
+                                    } else {
+                                      ToastContext().init(context);
+                                      Toast.show("Some Error occured",
+                                          duration: Toast.lengthShort,
+                                          gravity: Toast.bottom);
+                                    }
+                                  }
+                                },
+                                inputFormatters: [
+                                  LengthLimitingTextInputFormatter(1),
+                                ],
+                              );
+                            }),
                           ),
                         ],
                       ),
@@ -214,19 +248,34 @@ class OTPValidationScreen extends StatelessWidget {
                           textAlign: TextAlign.center,
                           style: TextStyle(fontSize: 17, color: lightGreyColor),
                         )),
-                        TextButton(
-                          onPressed: () {
-                            //* Have to send new code to the users email
-                          },
-                          child: Text(
-                            'Neuen Code senden!',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                                fontSize: 17,
-                                color: greyColor,
-                                fontWeight: FontWeight.bold),
-                          ),
-                        ),
+                        Consumer<ApiRegistrationProvider>(
+                            builder: (context, value, child) {
+                          return TextButton(
+                            onPressed: () async {
+                              int response = await provider.reactivateUser(
+                                  widget.email ?? '', value.anonAuthToken);
+                              if (response == 200) {
+                                ToastContext().init(context);
+                                Toast.show("OTP send to your email address",
+                                    duration: Toast.lengthShort,
+                                    gravity: Toast.bottom);
+                              } else {
+                                ToastContext().init(context);
+                                Toast.show("Some Error occured",
+                                    duration: Toast.lengthShort,
+                                    gravity: Toast.bottom);
+                              }
+                            },
+                            child: Text(
+                              'Neuen Code senden!',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                  fontSize: 17,
+                                  color: greyColor,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                          );
+                        }),
                       ],
                     ),
                     const SizedBox(

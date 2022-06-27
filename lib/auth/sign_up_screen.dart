@@ -2,7 +2,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hearooz/auth/login_screen.dart';
 import 'package:hearooz/auth/otp_validation_screen.dart';
+import 'package:hearooz/providers/api_registration_provider.dart';
+import 'package:hearooz/providers/user_registration.dart';
+import 'package:provider/provider.dart';
 import 'package:wave/config.dart';
+import 'package:toast/toast.dart';
 import 'package:wave/wave.dart';
 
 class SignUpScreen extends StatefulWidget {
@@ -16,6 +20,16 @@ class _SignUpScreenState extends State<SignUpScreen> {
   bool isChecked = false;
 
   final myController = TextEditingController();
+  late final UserRegistrationProvider userRegisterProvider;
+
+  @override
+  void initState() {
+    Future.delayed(const Duration(milliseconds: 100), () {
+      userRegisterProvider =
+          Provider.of<UserRegistrationProvider>(context, listen: false);
+    });
+    super.initState();
+  }
 
   @override
   void dispose() {
@@ -200,32 +214,47 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     height: 60,
                     decoration: BoxDecoration(
                         border: Border.all(
-                          color: lightGreyColor,
+                          color: isChecked && isChecked2
+                              ? Colors.blue
+                              : lightGreyColor,
                         ),
                         color: isChecked && isChecked2
                             ? Colors.blue
                             : lightGreyColor,
                         borderRadius:
                             const BorderRadius.all(Radius.circular(20))),
-                    child: TextButton(
-                        onPressed: () {
-                          if (isChecked && isChecked2) {
-                            //*the api call to register a user
-                            Navigator.of(context).pushReplacement(
-                                MaterialPageRoute(
-                                    builder: (BuildContext context) =>
-                                        OTPValidationScreen(
-                                          email: myController.text,
-                                        )));
-                          }
-                        },
-                        child: const Text(
-                          'Los geht\'s!',
-                          style: TextStyle(
-                            fontSize: 24,
-                            color: Colors.white,
-                          ),
-                        )),
+                    child: Consumer<ApiRegistrationProvider>(
+                        builder: (context, value, child) {
+                      return TextButton(
+                          onPressed: () async {
+                            if (isChecked && isChecked2) {
+                              var response =
+                                  await userRegisterProvider.registerUser(
+                                      myController.text, value.anonAuthToken);
+                              print('The response is ' + response.toString());
+                              if (response == 201) {
+                                Navigator.of(context).pushReplacement(
+                                    MaterialPageRoute(
+                                        builder: (BuildContext context) =>
+                                            OTPValidationScreen(
+                                              email: myController.text,
+                                            )));
+                              } else {
+                                ToastContext().init(context);
+                                Toast.show("Some Error occured",
+                                    duration: Toast.lengthShort,
+                                    gravity: Toast.bottom);
+                              }
+                            }
+                          },
+                          child: const Text(
+                            'Los geht\'s!',
+                            style: TextStyle(
+                              fontSize: 24,
+                              color: Colors.white,
+                            ),
+                          ));
+                    }),
                   ),
                   const SizedBox(
                     height: 20,

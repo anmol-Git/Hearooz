@@ -8,6 +8,8 @@ import 'package:hearooz/home/widgets/home_icon_screen.dart';
 import 'package:hearooz/home/widgets/profile/profile_icon.dart';
 import 'package:hearooz/home/widgets/profile/profile_icon_user.dart';
 import 'package:hearooz/home/widgets/search_icon_screen.dart';
+import 'package:hearooz/models/device%20registration/api_registration.dart';
+import 'package:hearooz/providers/api_registration_provider.dart';
 import 'package:hearooz/providers/profile_screen_provider.dart';
 import 'package:miniplayer/miniplayer.dart';
 import 'package:provider/provider.dart';
@@ -41,8 +43,12 @@ class _MainHomePageState extends State<MainHomePage>
   late AnimationController _profileAnimationController;
   late Animation _profileAnimation;
 
+  late ApiRegisteration response;
+
+  String anonAuthToken = '';
   @override
   void initState() {
+    super.initState();
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersive);
     _tabController = TabController(length: 4, vsync: this, initialIndex: 0);
 
@@ -87,7 +93,10 @@ class _MainHomePageState extends State<MainHomePage>
         }
       });
     });
-    super.initState();
+    Future.delayed(const Duration(milliseconds: 100), () {
+      Provider.of<ApiRegistrationProvider>(context, listen: false)
+          .getSinglePostData(context);
+    });
   }
 
   @override
