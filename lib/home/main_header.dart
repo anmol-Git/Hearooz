@@ -14,34 +14,12 @@ class Header extends StatefulWidget {
 }
 
 class _HeaderState extends State<Header> {
-  // final audioPlayer = AudioPlayer();
-  // bool isPlaying = false;
-  // Duration duration = Duration.zero;
-  // Duration position = Duration.zero;
   String url = "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3";
 
   @override
   void initState() {
     super.initState();
     getIt<PageManager>().init();
-    // setAudio();
-    // audioPlayer.onPlayerStateChanged.listen((event) {
-    //   setState(() {
-    //     isPlaying = event == PlayerState.PLAYING;
-    //   });
-    // });
-
-    // audioPlayer.onDurationChanged.listen((newDuration) {
-    //   setState(() {
-    //     duration = newDuration;
-    //   });
-    // });
-
-    // audioPlayer.onAudioPositionChanged.listen((newPosition) {
-    //   setState(() {
-    //     position = newPosition;
-    //   });
-    // });
   }
 
   String formatTime(Duration duration) {
@@ -65,7 +43,6 @@ class _HeaderState extends State<Header> {
 
   @override
   void dispose() {
-    //audioPlayer.dispose();
     getIt<PageManager>().dispose();
     super.dispose();
   }
@@ -74,7 +51,7 @@ class _HeaderState extends State<Header> {
   Widget build(BuildContext context) {
     final pageManager = getIt<PageManager>();
     return Container(
-      height: 150,
+      height: 160,
       color: Colors.blue[700],
       child: Column(
         children: [

@@ -12,7 +12,6 @@ class HeartIconScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: MediaQuery.of(context).size.height - 150,
       color: Colors.white,
       child: Consumer<ProfileScreenProvider>(builder: (context, value, child) {
         return Column(
@@ -46,14 +45,14 @@ class HeartIconScreen extends StatelessWidget {
                   ]),
             ),
             const SizedBox(
-              height: 180,
+              height: 50,
             ),
             value.isVerfied == true
                 ? const SizedBox(
                     height: 0,
                   )
                 : SizedBox(
-                    height: 420,
+                    height: 320,
                     child: Stack(
                       children: [
                         WaveWidget(

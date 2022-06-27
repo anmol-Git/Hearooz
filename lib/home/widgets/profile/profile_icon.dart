@@ -10,7 +10,8 @@ class ProfileScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
+    return Container(
+      color: Colors.blue[700],
       height: 420,
       child: Stack(
         children: [
@@ -50,8 +51,7 @@ class ProfileScreen extends StatelessWidget {
                         backgroundColor:
                             MaterialStateProperty.all(const Color(0xFF4a95fa))),
                     onPressed: () {
-                      Navigator.push(
-                          context,
+                      Navigator.of(context, rootNavigator: true).push(
                           PageRouteBuilder(
                               transitionDuration:
                                   const Duration(milliseconds: 400),
@@ -99,8 +99,7 @@ class ProfileScreen extends StatelessWidget {
               right: 68,
               child: InkWell(
                 onTap: () {
-                  Navigator.push(
-                      context,
+                  Navigator.of(context, rootNavigator: true).push(
                       PageRouteBuilder(
                           transitionDuration: const Duration(milliseconds: 400),
                           transitionsBuilder: (BuildContext context, animation,

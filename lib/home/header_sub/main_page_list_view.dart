@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hearooz/home/widgets/heart_icon_screen.dart';
 
 class MainPageListView extends StatelessWidget {
   const MainPageListView({Key? key}) : super(key: key);
@@ -16,7 +17,10 @@ class MainPageListView extends StatelessWidget {
             child: ClipRRect(
               borderRadius: const BorderRadius.all(Radius.circular(5)),
               child: InkWell(
-                onTap: () {},
+                onTap: () {
+                  Navigator.push(
+                      context, SlideRightRoute(page: const HeartIconScreen()));
+                },
                 child: Container(
                   height: 150,
                   width: 150,
@@ -29,4 +33,30 @@ class MainPageListView extends StatelessWidget {
       ),
     );
   }
+}
+
+class SlideRightRoute extends PageRouteBuilder {
+  final Widget page;
+  SlideRightRoute({required this.page})
+      : super(
+          pageBuilder: (
+            BuildContext context,
+            Animation<double> animation,
+            Animation<double> secondaryAnimation,
+          ) =>
+              page,
+          transitionsBuilder: (
+            BuildContext context,
+            Animation<double> animation,
+            Animation<double> secondaryAnimation,
+            Widget child,
+          ) =>
+              SlideTransition(
+            position: Tween<Offset>(
+              begin: const Offset(-1, 0),
+              end: Offset.zero,
+            ).animate(animation),
+            child: child,
+          ),
+        );
 }
