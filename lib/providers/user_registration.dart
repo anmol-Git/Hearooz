@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter/widgets.dart';
 import 'package:hearooz/models/user%20profile/user_profile.dart';
 import 'package:http/http.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class UserRegistrationProvider with ChangeNotifier {
   late Map<String, dynamic> responseBody;
@@ -60,6 +61,8 @@ class UserRegistrationProvider with ChangeNotifier {
       responseBodyVerified = UserProfile.fromMap(data);
       print('This is the refresh token:- ' +
           responseBodyVerified.refreshToken.token);
+      storeData(responseBodyVerified
+          .refreshToken.token); //storing to internal storage
     } else {
       print('the response is ' + response.body);
     }
@@ -92,5 +95,11 @@ class UserRegistrationProvider with ChangeNotifier {
 
     print('Reactivate status code is ' + statusCode.toString());
     return statusCode;
+  }
+
+  void storeData(String text) async {
+    String finalText = "Bearer " + text;
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setString('token', finalText);
   }
 }

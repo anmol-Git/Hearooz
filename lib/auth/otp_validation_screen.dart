@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hearooz/auth/auth_verification.dart';
 import 'package:hearooz/providers/api_registration_provider.dart';
+import 'package:hearooz/providers/profile_screen_provider.dart';
 import 'package:hearooz/providers/user_registration.dart';
 import 'package:provider/provider.dart';
 import 'package:toast/toast.dart';
@@ -195,42 +196,47 @@ class _OTPValidationScreenState extends State<OTPValidationScreen> {
                           SizedBox(
                             height: 68,
                             width: 64,
-                            child: Consumer<ApiRegistrationProvider>(
-                                builder: (context, value, child) {
-                              return TextFormField(
-                                style: const TextStyle(
-                                    fontSize: 22,
-                                    color: Colors.blue,
-                                    fontWeight: FontWeight.bold),
-                                textAlign: TextAlign.center,
-                                onChanged: (val) async {
-                                  if (val.length == 1) {
-                                    e = val.toString();
-                                    String input = a + b + c + d + e;
-                                    print(input);
+                            child: Consumer<ProfileScreenProvider>(
+                                builder: (context2, provider2, child2) {
+                              return Consumer<ApiRegistrationProvider>(
+                                  builder: (context, value, child) {
+                                return TextFormField(
+                                  style: const TextStyle(
+                                      fontSize: 22,
+                                      color: Colors.blue,
+                                      fontWeight: FontWeight.bold),
+                                  textAlign: TextAlign.center,
+                                  onChanged: (val) async {
+                                    if (val.length == 1) {
+                                      e = val.toString();
+                                      String input = a + b + c + d + e;
+                                      print(input);
 
-                                    int response = await provider.verifyUser(
-                                        widget.email ?? '',
-                                        input,
-                                        value.anonAuthToken);
+                                      int response = await provider.verifyUser(
+                                          widget.email ?? '',
+                                          input,
+                                          value.anonAuthToken);
 
-                                    if (response == 200) {
-                                      Navigator.of(context).pushReplacement(
-                                          MaterialPageRoute(
-                                              builder: (BuildContext context) =>
-                                                  const AuthVerification()));
-                                    } else {
-                                      ToastContext().init(context);
-                                      Toast.show("Some Error occured",
-                                          duration: Toast.lengthShort,
-                                          gravity: Toast.bottom);
+                                      if (response == 200) {
+                                        provider2.isVerfied = true;
+                                        Navigator.of(context).pushReplacement(
+                                            MaterialPageRoute(
+                                                builder: (BuildContext
+                                                        context) =>
+                                                    const AuthVerification()));
+                                      } else {
+                                        ToastContext().init(context);
+                                        Toast.show("Some Error occured",
+                                            duration: Toast.lengthShort,
+                                            gravity: Toast.bottom);
+                                      }
                                     }
-                                  }
-                                },
-                                inputFormatters: [
-                                  LengthLimitingTextInputFormatter(1),
-                                ],
-                              );
+                                  },
+                                  inputFormatters: [
+                                    LengthLimitingTextInputFormatter(1),
+                                  ],
+                                );
+                              });
                             }),
                           ),
                         ],

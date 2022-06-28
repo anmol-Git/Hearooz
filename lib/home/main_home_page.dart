@@ -13,6 +13,8 @@ import 'package:hearooz/providers/api_registration_provider.dart';
 import 'package:hearooz/providers/profile_screen_provider.dart';
 import 'package:miniplayer/miniplayer.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:toast/toast.dart';
 import 'package:url_launcher/link.dart';
 
 class MainHomePage extends StatefulWidget {
@@ -46,9 +48,11 @@ class _MainHomePageState extends State<MainHomePage>
   late ApiRegisteration response;
 
   String anonAuthToken = '';
+  String refreshToken = '';
   @override
   void initState() {
     super.initState();
+    readData();
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersive);
     _tabController = TabController(length: 4, vsync: this, initialIndex: 0);
 
@@ -93,10 +97,43 @@ class _MainHomePageState extends State<MainHomePage>
         }
       });
     });
-    Future.delayed(const Duration(milliseconds: 100), () {
-      Provider.of<ApiRegistrationProvider>(context, listen: false)
-          .getSinglePostData(context);
-    });
+  }
+
+  void readData() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? str = prefs.getString('token');
+    if (str != null) {
+      if (str.length > 10) {
+        refreshToken = str;
+        print('The shared prefrence value is : ' + refreshToken);
+      }
+    }
+    print('The shared prefrence value is : ' + refreshToken);
+    if (refreshToken == '') {
+      //? for anonomous user
+      Future.delayed(const Duration(milliseconds: 100), () {
+        Provider.of<ApiRegistrationProvider>(context, listen: false)
+            .anonomousUserRegistration();
+      });
+    } else {
+      //? for signed up user
+      Future.delayed(const Duration(milliseconds: 100), () {
+        Provider.of<ApiRegistrationProvider>(context, listen: false)
+            .signedUpUserRegisteration(refreshToken);
+        setState(() {
+          Provider.of<ProfileScreenProvider>(context).isVerfied = true;
+          ToastContext().init(context);
+          Toast.show(refreshToken,
+              duration: Toast.lengthShort, gravity: Toast.bottom);
+        });
+      });
+    }
+  }
+
+  void storeData(String text) async {
+    String finalText = "Bearer " + text;
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setString('token', finalText);
   }
 
   @override
@@ -295,8 +332,9 @@ class _MainHomePageState extends State<MainHomePage>
                                               )
                                             : GestureDetector(
                                                 onTap: () {
-                                                  Navigator.of(context).push(
-                                                      MaterialPageRoute(
+                                                  Navigator.of(context,
+                                                          rootNavigator: true)
+                                                      .push(MaterialPageRoute(
                                                           builder: (BuildContext
                                                                   context) =>
                                                               const LoginScreen()));
@@ -394,7 +432,11 @@ class _MainHomePageState extends State<MainHomePage>
                                         ),
                                         value.isVerfied == true
                                             ? GestureDetector(
-                                                onTap: () {},
+                                                onTap: () {
+                                                  value.isVerfied = false;
+                                                  storeData('');
+                                                  setState(() {});
+                                                },
                                                 child: Container(
                                                   alignment:
                                                       Alignment.centerLeft,
