@@ -11,6 +11,7 @@ import 'package:hearooz/home/widgets/search_icon_screen.dart';
 import 'package:hearooz/models/device%20registration/api_registration.dart';
 import 'package:hearooz/providers/api_registration_provider.dart';
 import 'package:hearooz/providers/profile_screen_provider.dart';
+import 'package:hearooz/providers/user_registration.dart';
 import 'package:miniplayer/miniplayer.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -108,7 +109,6 @@ class _MainHomePageState extends State<MainHomePage>
         print('The shared prefrence value is : ' + refreshToken);
       }
     }
-    print('The shared prefrence value is : ' + refreshToken);
     if (refreshToken == '') {
       //? for anonomous user
       Future.delayed(const Duration(milliseconds: 100), () {
@@ -117,14 +117,16 @@ class _MainHomePageState extends State<MainHomePage>
       });
     } else {
       //? for signed up user
-      Future.delayed(const Duration(milliseconds: 100), () {
-        Provider.of<ApiRegistrationProvider>(context, listen: false)
-            .signedUpUserRegisteration(refreshToken);
+      Future.delayed(const Duration(milliseconds: 100), () async {
+        String token =
+            await Provider.of<ApiRegistrationProvider>(context, listen: false)
+                .signedUpUserRegisteration(refreshToken);
         setState(() {
-          Provider.of<ProfileScreenProvider>(context).isVerfied = true;
-          ToastContext().init(context);
-          Toast.show(refreshToken,
-              duration: Toast.lengthShort, gravity: Toast.bottom);
+          Provider.of<UserRegistrationProvider>(context, listen: false)
+              .refreshToken = token.substring(7);
+          Provider.of<ProfileScreenProvider>(context, listen: false).isVerfied =
+              true;
+          print('refresh token when user ' + token);
         });
       });
     }
@@ -214,7 +216,7 @@ class _MainHomePageState extends State<MainHomePage>
                                     labelPadding: EdgeInsets.zero,
                                     tabs: [
                                       Tab(
-                                        icon: Icon(
+                                        child: Icon(
                                           Icons.home,
                                           size: _selectedIndex == 0
                                               ? _homeAnimation.value
@@ -303,25 +305,81 @@ class _MainHomePageState extends State<MainHomePage>
                                   child: Container(
                                     alignment: Alignment.centerLeft,
                                     color: Colors.blue[700],
-                                    child: Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                      children: [
-                                        value.isVerfied == true
-                                            ? GestureDetector(
-                                                onTap: () {
-                                                  Navigator.of(context).push(
-                                                      MaterialPageRoute(
-                                                          builder: (BuildContext
-                                                                  context) =>
-                                                              const LoginScreen()));
-                                                },
+                                    child: Consumer<UserRegistrationProvider>(
+                                        builder: (context2, value2, child2) {
+                                      return Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        children: [
+                                          value.isVerfied == true
+                                              ? Link(
+                                                  uri: Uri.parse(
+                                                      'https://www.hearooz.de/app/login?handover=${value2.refreshToken}&target=user'),
+                                                  builder:
+                                                      (BuildContext context,
+                                                          Future<void>
+                                                                  Function()?
+                                                              followLink) {
+                                                    return GestureDetector(
+                                                      onTap: followLink,
+                                                      child: Container(
+                                                        alignment: Alignment
+                                                            .centerLeft,
+                                                        height: 25,
+                                                        child: const Text(
+                                                          'Mein Account',
+                                                          style: TextStyle(
+                                                              color:
+                                                                  Colors.white,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w400,
+                                                              fontSize: 24),
+                                                        ),
+                                                      ),
+                                                    );
+                                                  },
+                                                )
+                                              : GestureDetector(
+                                                  onTap: () {
+                                                    Navigator.of(context,
+                                                            rootNavigator: true)
+                                                        .push(MaterialPageRoute(
+                                                            builder: (BuildContext
+                                                                    context) =>
+                                                                const LoginScreen()));
+                                                  },
+                                                  child: Container(
+                                                    alignment:
+                                                        Alignment.centerLeft,
+                                                    height: 25,
+                                                    child: const Text(
+                                                      'Login',
+                                                      style: TextStyle(
+                                                          color: Colors.white,
+                                                          fontWeight:
+                                                              FontWeight.w400,
+                                                          fontSize: 24),
+                                                    ),
+                                                  ),
+                                                ),
+                                          const SizedBox(
+                                            height: 10,
+                                          ),
+                                          Link(
+                                            uri: Uri.parse(
+                                                'https://www.hearooz.de/'),
+                                            builder: (BuildContext context,
+                                                Future<void> Function()?
+                                                    followLink) {
+                                              return GestureDetector(
+                                                onTap: followLink,
                                                 child: Container(
                                                   alignment:
                                                       Alignment.centerLeft,
                                                   height: 25,
                                                   child: const Text(
-                                                    'Mein Account',
+                                                    'HEAROOZ.de',
                                                     style: TextStyle(
                                                         color: Colors.white,
                                                         fontWeight:
@@ -329,46 +387,25 @@ class _MainHomePageState extends State<MainHomePage>
                                                         fontSize: 24),
                                                   ),
                                                 ),
-                                              )
-                                            : GestureDetector(
-                                                onTap: () {
-                                                  Navigator.of(context,
-                                                          rootNavigator: true)
-                                                      .push(MaterialPageRoute(
-                                                          builder: (BuildContext
-                                                                  context) =>
-                                                              const LoginScreen()));
-                                                },
-                                                child: Container(
-                                                  alignment:
-                                                      Alignment.centerLeft,
-                                                  height: 25,
-                                                  child: const Text(
-                                                    'Login',
-                                                    style: TextStyle(
-                                                        color: Colors.white,
-                                                        fontWeight:
-                                                            FontWeight.w400,
-                                                        fontSize: 24),
-                                                  ),
-                                                ),
-                                              ),
-                                        const SizedBox(
-                                          height: 10,
-                                        ),
-                                        Link(
-                                          uri: Uri.parse(
-                                              'https://www.hearooz.de/'),
-                                          builder: (BuildContext context,
-                                              Future<void> Function()?
-                                                  followLink) {
-                                            return GestureDetector(
+                                              );
+                                            },
+                                          ),
+                                          const SizedBox(
+                                            height: 10,
+                                          ),
+                                          Link(
+                                            uri: Uri.parse(
+                                                'https://www.hearooz.de/support'),
+                                            builder: (BuildContext context,
+                                                    Future<void> Function()?
+                                                        followLink) =>
+                                                GestureDetector(
                                               onTap: followLink,
                                               child: Container(
                                                 alignment: Alignment.centerLeft,
                                                 height: 25,
                                                 child: const Text(
-                                                  'HEAROOZ.de',
+                                                  'Hilfe',
                                                   style: TextStyle(
                                                       color: Colors.white,
                                                       fontWeight:
@@ -376,86 +413,63 @@ class _MainHomePageState extends State<MainHomePage>
                                                       fontSize: 24),
                                                 ),
                                               ),
-                                            );
-                                          },
-                                        ),
-                                        const SizedBox(
-                                          height: 10,
-                                        ),
-                                        Link(
-                                          uri: Uri.parse(
-                                              'https://www.hearooz.de/support'),
-                                          builder: (BuildContext context,
-                                                  Future<void> Function()?
-                                                      followLink) =>
-                                              GestureDetector(
-                                            onTap: followLink,
-                                            child: Container(
-                                              alignment: Alignment.centerLeft,
-                                              height: 25,
-                                              child: const Text(
-                                                'Hilfe',
-                                                style: TextStyle(
-                                                    color: Colors.white,
-                                                    fontWeight: FontWeight.w400,
-                                                    fontSize: 24),
-                                              ),
                                             ),
                                           ),
-                                        ),
-                                        const SizedBox(
-                                          height: 10,
-                                        ),
-                                        Link(
-                                          uri: Uri.parse(
-                                              'https://www.hearooz.de/datenschutzerklarung-app'),
-                                          builder: (BuildContext context,
-                                                  Future<void> Function()?
-                                                      followLink) =>
-                                              GestureDetector(
-                                            onTap: followLink,
-                                            child: Container(
-                                              alignment: Alignment.centerLeft,
-                                              height: 25,
-                                              child: const Text(
-                                                'Datenschutz',
-                                                style: TextStyle(
-                                                    color: Colors.white,
-                                                    fontWeight: FontWeight.w400,
-                                                    fontSize: 24),
-                                              ),
-                                            ),
+                                          const SizedBox(
+                                            height: 10,
                                           ),
-                                        ),
-                                        const SizedBox(
-                                          height: 10,
-                                        ),
-                                        value.isVerfied == true
-                                            ? GestureDetector(
-                                                onTap: () {
-                                                  value.isVerfied = false;
-                                                  storeData('');
-                                                  setState(() {});
-                                                },
-                                                child: Container(
-                                                  alignment:
-                                                      Alignment.centerLeft,
-                                                  height: 25,
-                                                  child: const Text(
-                                                    'Logout',
-                                                    style: TextStyle(
-                                                        color: Colors.white,
-                                                        fontWeight:
-                                                            FontWeight.w400,
-                                                        fontSize: 24),
-                                                  ),
+                                          Link(
+                                            uri: Uri.parse(
+                                                'https://www.hearooz.de/datenschutzerklarung-app'),
+                                            builder: (BuildContext context,
+                                                    Future<void> Function()?
+                                                        followLink) =>
+                                                GestureDetector(
+                                              onTap: followLink,
+                                              child: Container(
+                                                alignment: Alignment.centerLeft,
+                                                height: 25,
+                                                child: const Text(
+                                                  'Datenschutz',
+                                                  style: TextStyle(
+                                                      color: Colors.white,
+                                                      fontWeight:
+                                                          FontWeight.w400,
+                                                      fontSize: 24),
                                                 ),
-                                              )
-                                            : const SizedBox(
-                                                height: 0,
                                               ),
-                                      ],
-                                    ),
+                                            ),
+                                          ),
+                                          const SizedBox(
+                                            height: 10,
+                                          ),
+                                          value.isVerfied == true
+                                              ? GestureDetector(
+                                                  onTap: () {
+                                                    value.isVerfied = false;
+                                                    storeData('');
+                                                    setState(() {});
+                                                  },
+                                                  child: Container(
+                                                    alignment:
+                                                        Alignment.centerLeft,
+                                                    height: 25,
+                                                    child: const Text(
+                                                      'Logout',
+                                                      style: TextStyle(
+                                                          color: Colors.white,
+                                                          fontWeight:
+                                                              FontWeight.w400,
+                                                          fontSize: 24),
+                                                    ),
+                                                  ),
+                                                )
+                                              : const SizedBox(
+                                                  height: 0,
+                                                ),
+                                        ],
+                                      );
+                                    }),
                                   ),
                                 ),
                               ),

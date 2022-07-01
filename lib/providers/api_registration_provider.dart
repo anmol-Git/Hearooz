@@ -34,8 +34,7 @@ class ApiRegistrationProvider with ChangeNotifier {
     }
   }
 
-  Future<ApiRegisteration> signedUpUserRegisteration(
-      String refreshToken) async {
+  Future<String> signedUpUserRegisteration(String refreshToken) async {
     try {
       var url = Uri.parse('https://api.hearooz.de/api/v1/hello');
       final response = await http.get(
@@ -45,8 +44,10 @@ class ApiRegistrationProvider with ChangeNotifier {
       if (response.statusCode == 200) {
         userAuthToken = response.headers["set-authorization"].toString();
         final item = json.decode(response.body);
+        print('inside user auth with 200 response ' +
+            response.statusCode.toString());
         result = ApiRegisteration.fromMap(item);
-        return result;
+        return userAuthToken;
       } else {
         return Future.error('Something went wrong');
       }

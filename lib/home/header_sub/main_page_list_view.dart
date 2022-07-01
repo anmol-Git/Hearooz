@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hearooz/home/widgets/heart_icon_screen.dart';
+import 'package:hearooz/providers/profile_screen_provider.dart';
+import 'package:provider/provider.dart';
 
 class MainPageListView extends StatelessWidget {
   const MainPageListView({Key? key}) : super(key: key);
@@ -12,23 +14,27 @@ class MainPageListView extends StatelessWidget {
         scrollDirection: Axis.horizontal,
         itemCount: 4,
         itemBuilder: (context, index) {
-          return Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: ClipRRect(
-              borderRadius: const BorderRadius.all(Radius.circular(5)),
-              child: InkWell(
-                onTap: () {
-                  Navigator.push(
-                      context, SlideRightRoute(page: const HeartIconScreen()));
-                },
-                child: Container(
-                  height: 150,
-                  width: 150,
-                  color: Colors.pink,
+          return Consumer<ProfileScreenProvider>(
+              builder: (context, value, child) {
+            return Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: ClipRRect(
+                borderRadius: const BorderRadius.all(Radius.circular(5)),
+                child: InkWell(
+                  onTap: () {
+                    value.isCatalogueClicked(true);
+                    Navigator.push(context,
+                        SlideRightRoute(page: const HeartIconScreen()));
+                  },
+                  child: Container(
+                    height: 150,
+                    width: 150,
+                    color: Colors.pink,
+                  ),
                 ),
               ),
-            ),
-          );
+            );
+          });
         },
       ),
     );

@@ -8,7 +8,7 @@ class UserRegistrationProvider with ChangeNotifier {
   late Map<String, dynamic> responseBody;
   late UserProfile responseBodyVerified;
   late Map<String, dynamic> responseBodyReactivate;
-
+  String refreshToken = '';
   Future<int> registerUser(String email, String authKey) async {
     final uri = Uri.parse('https://api.hearooz.de/api/v1/user');
     final headers = {
@@ -61,6 +61,7 @@ class UserRegistrationProvider with ChangeNotifier {
       responseBodyVerified = UserProfile.fromMap(data);
       print('This is the refresh token:- ' +
           responseBodyVerified.refreshToken.token);
+      refreshToken = responseBodyVerified.refreshToken.token;
       storeData(responseBodyVerified
           .refreshToken.token); //storing to internal storage
     } else {
