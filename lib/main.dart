@@ -19,21 +19,27 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider<ProfileScreenProvider>(
-        create: (context) => ProfileScreenProvider(),
-        child: ChangeNotifierProvider<UserRegistrationProvider>(
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider<ProfileScreenProvider>(
+          create: (context) => ProfileScreenProvider(),
+        ),
+        ChangeNotifierProvider<UserRegistrationProvider>(
           create: (context) => UserRegistrationProvider(),
-          child: ChangeNotifierProvider<ApiRegistrationProvider>(
-              create: (context) => ApiRegistrationProvider(),
-              child: MaterialApp(
-                title: 'Flutter Demo',
-                theme: ThemeData(
-                  primarySwatch: Colors.blue,
-                  highlightColor: Colors.transparent,
-                  splashColor: Colors.transparent,
-                ),
-                home: const SplashScreen(),
-              )),
-        ));
+        ),
+        ChangeNotifierProvider<ApiRegistrationProvider>(
+          create: (context) => ApiRegistrationProvider(),
+        ),
+      ],
+      child: MaterialApp(
+        title: 'Flutter Demo',
+        theme: ThemeData(
+          primarySwatch: Colors.blue,
+          highlightColor: Colors.transparent,
+          splashColor: Colors.transparent,
+        ),
+        home: const SplashScreen(),
+      ),
+    );
   }
 }

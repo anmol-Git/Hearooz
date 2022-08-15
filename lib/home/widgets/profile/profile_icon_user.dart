@@ -50,36 +50,35 @@ class ProfileScreenUser extends StatelessWidget {
             Consumer<UserRegistrationProvider>(
                 builder: (context, value, child) {
               return Container(
-                height: 200,
-                alignment: Alignment.bottomCenter,
-                padding: const EdgeInsets.only(bottom: 40.0),
-                child: Link(
-                    uri: Uri.parse(
-                        'https://www.hearooz.de/app/login?handover=${value.refreshToken}&target=user'),
-                    builder: (context, followLink) {
-                      return ClipRRect(
-                        borderRadius:
-                            const BorderRadius.all(Radius.circular(25)),
-                        child: SizedBox(
-                          height: 60,
-                          width: MediaQuery.of(context).size.width * 0.8,
-                          child: TextButton(
-                              style: ButtonStyle(
-                                  backgroundColor: MaterialStateProperty.all(
-                                      const Color(0xFF4a95fa))),
-                              onPressed: () => followLink,
-                              child: const Text(
-                                'Profile bearbeiten',
-                                style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.w400),
-                              )),
-                        ),
-                      );
-                    }),
-              );
-            }),
+                  height: 200,
+                  alignment: Alignment.bottomCenter,
+                  padding: const EdgeInsets.only(bottom: 40.0),
+                  child: ClipRRect(
+                      borderRadius: const BorderRadius.all(Radius.circular(25)),
+                      child: SizedBox(
+                        height: 60,
+                        width: MediaQuery.of(context).size.width * 0.8,
+                        child: Link(
+                            uri: Uri.parse(
+                                'https://www.hearooz.de/app/login?handover=${value.refreshToken}&target=user'),
+                            builder:
+                                (context, Future<void> Function()? followLink) {
+                              return TextButton(
+                                  style: ButtonStyle(
+                                      backgroundColor:
+                                          MaterialStateProperty.all(
+                                              const Color(0xFF4a95fa))),
+                                  onPressed: followLink,
+                                  child: const Text(
+                                    'Profile bearbeiten',
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.w400),
+                                  ));
+                            }),
+                      )));
+            })
           ],
         ),
       ),

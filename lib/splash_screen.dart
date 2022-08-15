@@ -1,5 +1,3 @@
-// ignore_for_file: use_key_in_widget_constructors
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hearooz/utils/colors.dart';
@@ -14,29 +12,46 @@ class SplashScreen extends StatefulWidget {
 
 class _SplashScreenState extends State<SplashScreen>
     with SingleTickerProviderStateMixin {
-  late AnimationController _homeAnimationController;
-  late Animation _homeAnimation;
   double height = 150;
   double width = 150;
+
+  late AnimationController _splashScreenController;
+
   @override
   void initState() {
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersive);
-    setheight();
+    // setheight();
     super.initState();
-  }
 
-  void setheight() {
-    Future.delayed(const Duration(milliseconds: 100), () {
-      setState(() {
-        height = 80;
-        width = 80;
-      });
-      Future.delayed(const Duration(milliseconds: 700), () {
+    _splashScreenController = AnimationController(
+        vsync: this,
+        lowerBound: 80,
+        upperBound: 150,
+        duration: const Duration(seconds: 1))
+      ..addListener(() {
+        setState(() {
+          height = _splashScreenController.value;
+          width = _splashScreenController.value;
+        });
+      })
+      ..forward().whenCompleteOrCancel(() {
         Navigator.of(context).pushReplacement(
             MaterialPageRoute(builder: (context) => const MainHomePage()));
       });
-    });
   }
+
+  // void setheight() {
+  //   Future.delayed(const Duration(milliseconds: 100), () {
+  //     setState(() {
+  //       height = 80;
+  //       width = 80;
+  //     });
+  //     Future.delayed(const Duration(milliseconds: 700), () {
+  //       Navigator.of(context).pushReplacement(
+  //           MaterialPageRoute(builder: (context) => const MainHomePage()));
+  //     });
+  //   });
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -49,7 +64,7 @@ class _SplashScreenState extends State<SplashScreen>
             Container(
               alignment: Alignment.center,
               child: AnimatedContainer(
-                duration: const Duration(seconds: 2),
+                duration: const Duration(seconds: 1),
                 height: height,
                 width: width,
                 child: Image.asset(

@@ -4,7 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:hearooz/auth/login_screen.dart';
 import 'package:hearooz/home/main_header.dart';
 import 'package:hearooz/home/widgets/heart_icon_screen.dart';
-import 'package:hearooz/home/widgets/home_icon_screen.dart';
+import 'package:hearooz/home/widgets/home/home_icon_screen.dart';
 import 'package:hearooz/home/widgets/profile/profile_icon.dart';
 import 'package:hearooz/home/widgets/profile/profile_icon_user.dart';
 import 'package:hearooz/home/widgets/search_icon_screen.dart';
@@ -15,7 +15,6 @@ import 'package:hearooz/providers/user_registration.dart';
 import 'package:miniplayer/miniplayer.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:toast/toast.dart';
 import 'package:url_launcher/link.dart';
 
 class MainHomePage extends StatefulWidget {
@@ -50,6 +49,7 @@ class _MainHomePageState extends State<MainHomePage>
 
   String anonAuthToken = '';
   String refreshToken = '';
+  late ProfileScreenProvider stateProvider;
   @override
   void initState() {
     super.initState();
@@ -81,6 +81,9 @@ class _MainHomePageState extends State<MainHomePage>
       setState(() {
         _selectedIndex = _tabController.index;
 
+        var provider =
+            Provider.of<ProfileScreenProvider>(context, listen: false);
+        provider.isCatalogueClicked(false);
         if (_selectedIndex == 0) {
           _homeAnimationController.forward();
         }
@@ -99,6 +102,16 @@ class _MainHomePageState extends State<MainHomePage>
       });
     });
   }
+
+  // void myListener() {
+  //   var provider = Provider.of(context, listen: false)<ProfileScreenProvider>();
+  //   print('object');
+  //   if (provider.isTapped == true) {
+  //     Navigator.pop(context);
+  //   }
+
+  //   provider.isCatalogueClicked(false);
+  // }
 
   void readData() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -140,9 +153,9 @@ class _MainHomePageState extends State<MainHomePage>
 
   @override
   void dispose() {
-    super.dispose();
     _heartAnimationController.dispose();
     _tabController.dispose();
+    super.dispose();
   }
 
   @override
@@ -206,66 +219,69 @@ class _MainHomePageState extends State<MainHomePage>
                               ),
                               Expanded(
                                 flex: 4,
-                                child: SizedBox(
-                                  height: 50,
-                                  child: TabBar(
-                                    controller: _tabController,
-                                    indicatorColor: Colors.transparent,
-                                    padding: EdgeInsets.zero,
-                                    indicatorPadding: EdgeInsets.zero,
-                                    labelPadding: EdgeInsets.zero,
-                                    tabs: [
-                                      Tab(
-                                        child: Icon(
-                                          Icons.home,
-                                          size: _selectedIndex == 0
-                                              ? _homeAnimation.value
-                                              : 30,
-                                          color: _selectedIndex == 0
-                                              ? Colors.yellow
-                                              : Colors.white,
-                                        ),
-                                      ),
-                                      Tab(
-                                        child: Icon(
-                                          CupertinoIcons.heart_fill,
-                                          size: _selectedIndex == 1
-                                              ? _heartAnimation.value
-                                              : 30,
-                                          color: _selectedIndex == 1
-                                              ? Colors.red
-                                              : Colors.white,
-                                        ),
-                                      ),
-                                      Tab(
-                                        icon: Icon(
-                                          CupertinoIcons.search,
-                                          size: _selectedIndex == 2
-                                              ? _searchAnimation.value
-                                              : 30,
-                                          color: _selectedIndex == 2
-                                              ? Colors.yellow
-                                              : Colors.white,
-                                        ),
-                                      ),
-                                      Tab(
-                                        child: Padding(
-                                          padding:
-                                              const EdgeInsets.only(left: 15.0),
-                                          child: Icon(
-                                            CupertinoIcons.profile_circled,
-                                            size: _selectedIndex == 3
-                                                ? _profileAnimation.value
+                                child: Consumer<ProfileScreenProvider>(
+                                    builder: (context1, value, child) {
+                                  return SizedBox(
+                                    height: 50,
+                                    child: TabBar(
+                                      controller: _tabController,
+                                      indicatorColor: Colors.transparent,
+                                      padding: EdgeInsets.zero,
+                                      indicatorPadding: EdgeInsets.zero,
+                                      labelPadding: EdgeInsets.zero,
+                                      tabs: [
+                                        Tab(
+                                          icon: Icon(
+                                            Icons.home,
+                                            size: _selectedIndex == 0
+                                                ? _homeAnimation.value
                                                 : 30,
-                                            color: _selectedIndex == 3
+                                            color: _selectedIndex == 0
                                                 ? Colors.yellow
                                                 : Colors.white,
                                           ),
                                         ),
-                                      )
-                                    ],
-                                  ),
-                                ),
+                                        Tab(
+                                          icon: Icon(
+                                            CupertinoIcons.heart_fill,
+                                            size: _selectedIndex == 1
+                                                ? _heartAnimation.value
+                                                : 30,
+                                            color: _selectedIndex == 1
+                                                ? Colors.red
+                                                : Colors.white,
+                                          ),
+                                        ),
+                                        Tab(
+                                          icon: Icon(
+                                            CupertinoIcons.search,
+                                            size: _selectedIndex == 2
+                                                ? _searchAnimation.value
+                                                : 30,
+                                            color: _selectedIndex == 2
+                                                ? Colors.yellow
+                                                : Colors.white,
+                                          ),
+                                        ),
+                                        Tab(
+                                          child: Padding(
+                                            padding: const EdgeInsets.only(
+                                                left: 15.0),
+                                            child: Icon(
+                                              CupertinoIcons.profile_circled,
+                                              size: _selectedIndex == 3
+                                                  ? _profileAnimation.value
+                                                  : 30,
+                                              color: _selectedIndex == 3
+                                                  ? Colors.yellow
+                                                  : Colors.white,
+                                            ),
+                                          ),
+                                        )
+                                      ],
+                                    ),
+                                  );
+                                }),
                               ),
                             ],
                           ),
@@ -283,78 +299,105 @@ class _MainHomePageState extends State<MainHomePage>
                     key: _navigatorKey,
                     onGenerateRoute: (settings) => MaterialPageRoute(
                       settings: settings,
-                      builder: (context) => Column(
-                        children: [
-                          Consumer<ProfileScreenProvider>(
-                              builder: (context, value, child) {
-                            return Container(
-                              color: Colors.blue[700],
-                              alignment: Alignment.centerLeft,
-                              height: selected
-                                  ? value.isVerfied == true
-                                      ? 180
-                                      : 150
-                                  : 0,
-                              child: AnimatedContainer(
+                      builder: (context) => SingleChildScrollView(
+                        child: Column(
+                          children: [
+                            Consumer<ProfileScreenProvider>(
+                                builder: (context, value, child) {
+                              return Container(
+                                color: Colors.blue[700],
                                 alignment: Alignment.centerLeft,
-                                width: selected ? 200.0 : 0,
-                                duration: const Duration(milliseconds: 200),
-                                curve: Curves.fastOutSlowIn,
-                                child: Padding(
-                                  padding: const EdgeInsets.only(left: 10.0),
-                                  child: Container(
-                                    alignment: Alignment.centerLeft,
-                                    color: Colors.blue[700],
-                                    child: Consumer<UserRegistrationProvider>(
-                                        builder: (context2, value2, child2) {
-                                      return Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.start,
-                                        children: [
-                                          value.isVerfied == true
-                                              ? Link(
-                                                  uri: Uri.parse(
-                                                      'https://www.hearooz.de/app/login?handover=${value2.refreshToken}&target=user'),
-                                                  builder:
-                                                      (BuildContext context,
-                                                          Future<void>
-                                                                  Function()?
-                                                              followLink) {
-                                                    return GestureDetector(
-                                                      onTap: followLink,
-                                                      child: Container(
-                                                        alignment: Alignment
-                                                            .centerLeft,
-                                                        height: 25,
-                                                        child: const Text(
-                                                          'Mein Account',
-                                                          style: TextStyle(
-                                                              color:
-                                                                  Colors.white,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w400,
-                                                              fontSize: 24),
+                                height: selected
+                                    ? value.isVerfied == true
+                                        ? 180
+                                        : 150
+                                    : 0,
+                                child: AnimatedContainer(
+                                  alignment: Alignment.centerLeft,
+                                  width: selected ? 200.0 : 0,
+                                  duration: const Duration(milliseconds: 200),
+                                  curve: Curves.fastOutSlowIn,
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(left: 10.0),
+                                    child: Container(
+                                      alignment: Alignment.centerLeft,
+                                      color: Colors.blue[700],
+                                      child: Consumer<UserRegistrationProvider>(
+                                          builder: (context2, value2, child2) {
+                                        return Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                          children: [
+                                            value.isVerfied == true
+                                                ? Link(
+                                                    uri: Uri.parse(
+                                                        'https://www.hearooz.de/app/login?handover=${value2.refreshToken}&target=user'),
+                                                    builder:
+                                                        (BuildContext context,
+                                                            Future<void>
+                                                                    Function()?
+                                                                followLink) {
+                                                      return GestureDetector(
+                                                        onTap: followLink,
+                                                        child: Container(
+                                                          alignment: Alignment
+                                                              .centerLeft,
+                                                          height: 25,
+                                                          child: const Text(
+                                                            'Mein Account',
+                                                            style: TextStyle(
+                                                                color: Colors
+                                                                    .white,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w400,
+                                                                fontSize: 24),
+                                                          ),
                                                         ),
+                                                      );
+                                                    },
+                                                  )
+                                                : GestureDetector(
+                                                    onTap: () {
+                                                      Navigator.of(context,
+                                                              rootNavigator:
+                                                                  true)
+                                                          .push(MaterialPageRoute(
+                                                              builder: (BuildContext
+                                                                      context) =>
+                                                                  const LoginScreen()));
+                                                    },
+                                                    child: Container(
+                                                      alignment:
+                                                          Alignment.centerLeft,
+                                                      height: 25,
+                                                      child: const Text(
+                                                        'Login',
+                                                        style: TextStyle(
+                                                            color: Colors.white,
+                                                            fontWeight:
+                                                                FontWeight.w400,
+                                                            fontSize: 24),
                                                       ),
-                                                    );
-                                                  },
-                                                )
-                                              : GestureDetector(
-                                                  onTap: () {
-                                                    Navigator.of(context,
-                                                            rootNavigator: true)
-                                                        .push(MaterialPageRoute(
-                                                            builder: (BuildContext
-                                                                    context) =>
-                                                                const LoginScreen()));
-                                                  },
+                                                    ),
+                                                  ),
+                                            const SizedBox(
+                                              height: 10,
+                                            ),
+                                            Link(
+                                              uri: Uri.parse(
+                                                  'https://www.hearooz.de/'),
+                                              builder: (BuildContext context,
+                                                  Future<void> Function()?
+                                                      followLink) {
+                                                return GestureDetector(
+                                                  onTap: followLink,
                                                   child: Container(
                                                     alignment:
                                                         Alignment.centerLeft,
                                                     height: 25,
                                                     child: const Text(
-                                                      'Login',
+                                                      'HEAROOZ.de',
                                                       style: TextStyle(
                                                           color: Colors.white,
                                                           fontWeight:
@@ -362,24 +405,26 @@ class _MainHomePageState extends State<MainHomePage>
                                                           fontSize: 24),
                                                     ),
                                                   ),
-                                                ),
-                                          const SizedBox(
-                                            height: 10,
-                                          ),
-                                          Link(
-                                            uri: Uri.parse(
-                                                'https://www.hearooz.de/'),
-                                            builder: (BuildContext context,
-                                                Future<void> Function()?
-                                                    followLink) {
-                                              return GestureDetector(
+                                                );
+                                              },
+                                            ),
+                                            const SizedBox(
+                                              height: 10,
+                                            ),
+                                            Link(
+                                              uri: Uri.parse(
+                                                  'https://www.hearooz.de/support'),
+                                              builder: (BuildContext context,
+                                                      Future<void> Function()?
+                                                          followLink) =>
+                                                  GestureDetector(
                                                 onTap: followLink,
                                                 child: Container(
                                                   alignment:
                                                       Alignment.centerLeft,
                                                   height: 25,
                                                   child: const Text(
-                                                    'HEAROOZ.de',
+                                                    'Hilfe',
                                                     style: TextStyle(
                                                         color: Colors.white,
                                                         fontWeight:
@@ -387,118 +432,94 @@ class _MainHomePageState extends State<MainHomePage>
                                                         fontSize: 24),
                                                   ),
                                                 ),
-                                              );
-                                            },
-                                          ),
-                                          const SizedBox(
-                                            height: 10,
-                                          ),
-                                          Link(
-                                            uri: Uri.parse(
-                                                'https://www.hearooz.de/support'),
-                                            builder: (BuildContext context,
-                                                    Future<void> Function()?
-                                                        followLink) =>
-                                                GestureDetector(
-                                              onTap: followLink,
-                                              child: Container(
-                                                alignment: Alignment.centerLeft,
-                                                height: 25,
-                                                child: const Text(
-                                                  'Hilfe',
-                                                  style: TextStyle(
-                                                      color: Colors.white,
-                                                      fontWeight:
-                                                          FontWeight.w400,
-                                                      fontSize: 24),
-                                                ),
                                               ),
                                             ),
-                                          ),
-                                          const SizedBox(
-                                            height: 10,
-                                          ),
-                                          Link(
-                                            uri: Uri.parse(
-                                                'https://www.hearooz.de/datenschutzerklarung-app'),
-                                            builder: (BuildContext context,
-                                                    Future<void> Function()?
-                                                        followLink) =>
-                                                GestureDetector(
-                                              onTap: followLink,
-                                              child: Container(
-                                                alignment: Alignment.centerLeft,
-                                                height: 25,
-                                                child: const Text(
-                                                  'Datenschutz',
-                                                  style: TextStyle(
-                                                      color: Colors.white,
-                                                      fontWeight:
-                                                          FontWeight.w400,
-                                                      fontSize: 24),
-                                                ),
-                                              ),
+                                            const SizedBox(
+                                              height: 10,
                                             ),
-                                          ),
-                                          const SizedBox(
-                                            height: 10,
-                                          ),
-                                          value.isVerfied == true
-                                              ? GestureDetector(
-                                                  onTap: () {
-                                                    value.isVerfied = false;
-                                                    storeData('');
-                                                    setState(() {});
-                                                  },
-                                                  child: Container(
-                                                    alignment:
-                                                        Alignment.centerLeft,
-                                                    height: 25,
-                                                    child: const Text(
-                                                      'Logout',
-                                                      style: TextStyle(
-                                                          color: Colors.white,
-                                                          fontWeight:
-                                                              FontWeight.w400,
-                                                          fontSize: 24),
-                                                    ),
+                                            Link(
+                                              uri: Uri.parse(
+                                                  'https://www.hearooz.de/datenschutzerklarung-app'),
+                                              builder: (BuildContext context,
+                                                      Future<void> Function()?
+                                                          followLink) =>
+                                                  GestureDetector(
+                                                onTap: followLink,
+                                                child: Container(
+                                                  alignment:
+                                                      Alignment.centerLeft,
+                                                  height: 25,
+                                                  child: const Text(
+                                                    'Datenschutz',
+                                                    style: TextStyle(
+                                                        color: Colors.white,
+                                                        fontWeight:
+                                                            FontWeight.w400,
+                                                        fontSize: 24),
                                                   ),
-                                                )
-                                              : const SizedBox(
-                                                  height: 0,
                                                 ),
-                                        ],
-                                      );
-                                    }),
+                                              ),
+                                            ),
+                                            const SizedBox(
+                                              height: 10,
+                                            ),
+                                            value.isVerfied == true
+                                                ? GestureDetector(
+                                                    onTap: () {
+                                                      value.isVerfied = false;
+                                                      storeData('');
+                                                      setState(() {});
+                                                    },
+                                                    child: Container(
+                                                      alignment:
+                                                          Alignment.centerLeft,
+                                                      height: 25,
+                                                      child: const Text(
+                                                        'Logout',
+                                                        style: TextStyle(
+                                                            color: Colors.white,
+                                                            fontWeight:
+                                                                FontWeight.w400,
+                                                            fontSize: 24),
+                                                      ),
+                                                    ),
+                                                  )
+                                                : const SizedBox(
+                                                    height: 0,
+                                                  ),
+                                          ],
+                                        );
+                                      }),
+                                    ),
                                   ),
                                 ),
-                              ),
-                            );
-                          }),
-                          Consumer<ProfileScreenProvider>(
-                            builder: ((context, value, child) {
-                              return SizedBox(
-                                height: selected && value.isVerfied == true
-                                    ? height - 380
-                                    : selected
-                                        ? height - 350
-                                        : height - 200,
-                                child: TabBarView(
-                                    controller: _tabController,
-                                    physics:
-                                        const NeverScrollableScrollPhysics(),
-                                    children: [
-                                      const HomeIconScreen(),
-                                      const HeartIconScreen(),
-                                      const SearchIconScreen(),
-                                      value.isVerfied == true
-                                          ? const ProfileScreenUser()
-                                          : const ProfileScreen()
-                                    ]),
                               );
                             }),
-                          ),
-                        ],
+                            Consumer<ProfileScreenProvider>(
+                              builder: ((context, value, child) {
+                                return SizedBox(
+                                  height: selected && value.isVerfied == true
+                                      ? height - 380
+                                      : selected
+                                          ? height - 350
+                                          : height - 200,
+                                  child: TabBarView(
+                                      controller: _tabController,
+                                      physics:
+                                          const NeverScrollableScrollPhysics(),
+                                      children: [
+                                        const HomeIconScreen(),
+                                        const HeartIconScreen(),
+                                        const SearchIconScreen(),
+                                        value.isVerfied == true
+                                            ? const ProfileScreenUser()
+                                            : const ProfileScreen()
+                                      ]),
+                                );
+                              }),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ),

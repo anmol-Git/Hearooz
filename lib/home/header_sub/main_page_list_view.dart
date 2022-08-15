@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:hearooz/home/widgets/heart_icon_screen.dart';
+import 'package:hearooz/home/widgets/home/home_screen_podcast_channel.dart';
 import 'package:hearooz/providers/profile_screen_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -13,18 +13,21 @@ class MainPageListView extends StatelessWidget {
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
         itemCount: 4,
-        itemBuilder: (context, index) {
+        itemBuilder: (context1, index) {
           return Consumer<ProfileScreenProvider>(
-              builder: (context, value, child) {
+              builder: (context2, value, child) {
             return Padding(
               padding: const EdgeInsets.all(8.0),
               child: ClipRRect(
                 borderRadius: const BorderRadius.all(Radius.circular(5)),
-                child: InkWell(
+                child: GestureDetector(
                   onTap: () {
                     value.isCatalogueClicked(true);
-                    Navigator.push(context,
-                        SlideRightRoute(page: const HeartIconScreen()));
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const HomePagePodcastAlbum()),
+                    );
                   },
                   child: Container(
                     height: 150,
