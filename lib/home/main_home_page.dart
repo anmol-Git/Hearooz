@@ -10,6 +10,7 @@ import 'package:hearooz/home/widgets/profile/profile_icon_user.dart';
 import 'package:hearooz/home/widgets/search_icon_screen.dart';
 import 'package:hearooz/models/device%20registration/api_registration.dart';
 import 'package:hearooz/providers/api_registration_provider.dart';
+import 'package:hearooz/providers/catalog_retrieval_provider.dart';
 import 'package:hearooz/providers/profile_screen_provider.dart';
 import 'package:hearooz/providers/user_registration.dart';
 import 'package:miniplayer/miniplayer.dart';
@@ -49,6 +50,7 @@ class _MainHomePageState extends State<MainHomePage>
 
   String anonAuthToken = '';
   String refreshToken = '';
+  bool verified = false;
   late ProfileScreenProvider stateProvider;
   @override
   void initState() {
@@ -126,7 +128,12 @@ class _MainHomePageState extends State<MainHomePage>
       //? for anonomous user
       Future.delayed(const Duration(milliseconds: 100), () {
         Provider.of<ApiRegistrationProvider>(context, listen: false)
-            .anonomousUserRegistration();
+            .anonomousUserRegistration()
+            .then((value) => Provider.of<CatalogueRetrivalProvider>(context,
+                    listen: false)
+                .fetchFirstCatalogue(
+                    Provider.of<ApiRegistrationProvider>(context, listen: false)
+                        .anonAuthToken));
       });
     } else {
       //? for signed up user
@@ -139,6 +146,10 @@ class _MainHomePageState extends State<MainHomePage>
               .refreshToken = token.substring(7);
           Provider.of<ProfileScreenProvider>(context, listen: false).isVerfied =
               true;
+          verified = true;
+
+          Provider.of<CatalogueRetrivalProvider>(context, listen: false)
+              .fetchFirstCatalogue(token);
           print('refresh token when user ' + token);
         });
       });
@@ -503,18 +514,23 @@ class _MainHomePageState extends State<MainHomePage>
                                       : selected
                                           ? height - 350
                                           : height - 200,
-                                  child: TabBarView(
-                                      controller: _tabController,
-                                      physics:
-                                          const NeverScrollableScrollPhysics(),
-                                      children: [
-                                        const HomeIconScreen(),
-                                        const HeartIconScreen(),
-                                        const SearchIconScreen(),
-                                        value.isVerfied == true
-                                            ? const ProfileScreenUser()
-                                            : const ProfileScreen()
-                                      ]),
+                                  child: Consumer<CatalogueRetrivalProvider>(
+                                      builder: (context, value1, child1) {
+                                    return TabBarView(
+                                        controller: _tabController,
+                                        physics:
+                                            const NeverScrollableScrollPhysics(),
+                                        children: [
+                                          value1.isFetching == true
+                                              ? const HeartIconScreen()
+                                              : const HomeIconScreen(),
+                                          const HeartIconScreen(),
+                                          const SearchIconScreen(),
+                                          value.isVerfied == true
+                                              ? const ProfileScreenUser()
+                                              : const ProfileScreen()
+                                        ]);
+                                  }),
                                 );
                               }),
                             ),

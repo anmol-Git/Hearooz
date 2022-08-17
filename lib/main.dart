@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hearooz/audio/services/service_locator.dart';
 import 'package:hearooz/providers/api_registration_provider.dart';
+import 'package:hearooz/providers/catalog_retrieval_provider.dart';
 import 'package:hearooz/providers/profile_screen_provider.dart';
 import 'package:hearooz/providers/user_registration.dart';
 import 'package:hearooz/splash_screen.dart';
@@ -29,6 +30,9 @@ class MyApp extends StatelessWidget {
         ),
         ChangeNotifierProvider<ApiRegistrationProvider>(
           create: (context) => ApiRegistrationProvider(),
+        ),
+        ChangeNotifierProvider<CatalogueRetrivalProvider>(
+          create: (context) => CatalogueRetrivalProvider(),
         ),
       ],
       child: MaterialApp(

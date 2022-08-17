@@ -68,7 +68,7 @@ class _SplashScreenState extends State<SplashScreen>
                 height: height,
                 width: width,
                 child: Image.asset(
-                  'assets/chimp.png',
+                  'assets/ic_launcher_foreground.png',
                 ),
               ),
             ),
