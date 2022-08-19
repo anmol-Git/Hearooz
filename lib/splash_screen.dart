@@ -25,8 +25,8 @@ class _SplashScreenState extends State<SplashScreen>
 
     _splashScreenController = AnimationController(
         vsync: this,
-        lowerBound: 80,
-        upperBound: 150,
+        lowerBound: 120,
+        upperBound: 200,
         duration: const Duration(seconds: 1))
       ..addListener(() {
         setState(() {
@@ -69,6 +69,7 @@ class _SplashScreenState extends State<SplashScreen>
                 width: width,
                 child: Image.asset(
                   'assets/ic_launcher_foreground.png',
+                  fit: BoxFit.fill,
                 ),
               ),
             ),

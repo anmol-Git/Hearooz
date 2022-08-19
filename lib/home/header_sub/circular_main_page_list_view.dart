@@ -1,4 +1,7 @@
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 import '../../providers/profile_screen_provider.dart';
@@ -23,6 +26,23 @@ class CircularMainPageListView extends StatefulWidget {
 }
 
 class _CircularMainPageListViewState extends State<CircularMainPageListView> {
+  Future<String?> getImgUrl(String? imgUrl) async {
+    if (imgUrl != null) {
+      try {
+        Uint8List bytes =
+            (await NetworkAssetBundle(Uri.parse(imgUrl)).load(imgUrl))
+                .buffer
+                .asUint8List();
+        print("The image exists!");
+        return imgUrl;
+      } catch (e) {
+        print("Error: $e");
+        return null;
+      }
+    } else
+      return null;
+  }
+
   @override
   Widget build(BuildContext context) {
     return SizedBox(
@@ -57,23 +77,21 @@ class _CircularMainPageListViewState extends State<CircularMainPageListView> {
                   },
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(75),
-                    child: FadeInImage(
-                      image: data[0]['data']['cover_image'] != null
-                          ? NetworkImage(data[0]['data']['cover_image'])
-                          : const NetworkImage(
-                              'https://media.sproutsocial.com/uploads/2017/02/10x-featured-social-media-image-size.png'),
-                      placeholder: const AssetImage("assets/app_icon.png"),
-                      imageErrorBuilder: (context, error, stackTrace) {
-                        return Container(
-                          decoration: const BoxDecoration(
-                            shape: BoxShape.circle,
-                          ),
-                          child: Image.asset('assets/app_icon.png',
-                              fit: BoxFit.contain),
-                        );
-                      },
-                      fit: BoxFit.fill,
-                    ),
+                    child: FutureBuilder(
+                        future: getImgUrl(data[0]['data']['cover_image']),
+                        builder: (context, AsyncSnapshot snapshot) {
+                          bool error = snapshot.data == null;
+                          return SizedBox(
+                              child: !error
+                                  ? Image.network(
+                                      snapshot.data,
+                                      fit: BoxFit.fill,
+                                    )
+                                  : Image.asset(
+                                      'assets/app_icon.png',
+                                      fit: BoxFit.fill,
+                                    ));
+                        }),
                   ),
                 ),
               ),

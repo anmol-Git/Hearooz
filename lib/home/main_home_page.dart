@@ -5,6 +5,7 @@ import 'package:hearooz/auth/login_screen.dart';
 import 'package:hearooz/home/main_header.dart';
 import 'package:hearooz/home/widgets/heart_icon_screen.dart';
 import 'package:hearooz/home/widgets/home/home_icon_screen.dart';
+import 'package:hearooz/home/widgets/home_page_loading.dart';
 import 'package:hearooz/home/widgets/profile/profile_icon.dart';
 import 'package:hearooz/home/widgets/profile/profile_icon_user.dart';
 import 'package:hearooz/home/widgets/search_icon_screen.dart';
@@ -522,7 +523,7 @@ class _MainHomePageState extends State<MainHomePage>
                                             const NeverScrollableScrollPhysics(),
                                         children: [
                                           value1.isFetching == true
-                                              ? const HeartIconScreen()
+                                              ? const HomePageLoading()
                                               : const HomeIconScreen(),
                                           const HeartIconScreen(),
                                           const SearchIconScreen(),

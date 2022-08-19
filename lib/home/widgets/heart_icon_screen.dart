@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:hearooz/auth/login_screen.dart';
 import 'package:hearooz/auth/sign_up_screen.dart';
 import 'package:hearooz/providers/profile_screen_provider.dart';
@@ -39,10 +38,11 @@ class HeartIconScreen extends StatelessWidget {
                       ),
                       Padding(
                         padding: const EdgeInsets.only(right: 8.0),
-                        child: Image.network(
-                          'https://www.clipartmax.com/png/full/185-1851810_urban-monkey-urban-monkey-india-logo.png',
-                          width: 80,
-                          height: 80,
+                        child: Image.asset(
+                          'assets/ic_launcher_foreground.png',
+                          width: 100,
+                          height: 150,
+                          fit: BoxFit.fill,
                         ),
                       )
                     ]),
