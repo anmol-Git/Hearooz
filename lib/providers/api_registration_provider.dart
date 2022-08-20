@@ -56,4 +56,30 @@ class ApiRegistrationProvider with ChangeNotifier {
       return Future.error(e.toString());
     }
   }
+
+  Future<List<dynamic>> favoriteItem(String refreshToken) async {
+    try {
+      var url = Uri.parse('https://api.hearooz.de/api/user/profile');
+      final response = await http.get(
+        url,
+        headers: {
+          "Accept": "application/json",
+          "Authorization": refreshToken,
+          "Content-Type": "application/json"
+        },
+      );
+      if (response.statusCode == 200) {
+        final item = json.decode(response.body);
+
+        List<dynamic> list = item['profile']['favorites'];
+
+        return list;
+      } else {
+        return Future.error('Something went wrong');
+      }
+    } catch (e) {
+      print(e.toString());
+      return Future.error(e.toString());
+    }
+  }
 }
