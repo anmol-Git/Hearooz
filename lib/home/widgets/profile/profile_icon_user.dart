@@ -26,12 +26,10 @@ class ProfileScreenUser extends StatelessWidget {
                       color: Colors.blue,
                       borderRadius: BorderRadius.circular(15),
                     ),
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 15, vertical: 10),
-                    child: Image.network(
-                      'https://www.clipartmax.com/png/full/185-1851810_urban-monkey-urban-monkey-india-logo.png',
-                      height: 120,
-                      width: 100,
+                    child: Image.asset(
+                      'assets/ic_launcher_foreground.png',
+                      height: 180,
+                      width: 180,
                     ),
                   ),
                   const Padding(

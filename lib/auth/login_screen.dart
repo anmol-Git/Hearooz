@@ -100,7 +100,8 @@ class _LoginScreenState extends State<LoginScreen> {
                         showCursor: false,
                         style: TextStyle(
                           fontSize: 22,
-                          color: greyColor,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.blue[700],
                         ),
                         decoration: InputDecoration(
                           isDense: true,

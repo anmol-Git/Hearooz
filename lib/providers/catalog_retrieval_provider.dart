@@ -37,7 +37,7 @@ class CatalogueRetrivalProvider with ChangeNotifier {
         set.add(list[id]['data']['programme_id']);
       }
 
-      //print(set);
+      print('the set length is ${set.length}');
 
       for (var s in set) {
         List<dynamic> tempList = list
@@ -96,5 +96,22 @@ class CatalogueRetrivalProvider with ChangeNotifier {
     _isFetching = false;
     notifyListeners();
     return Future.error('Something went wrong!');
+  }
+
+  Future<List<dynamic>> searchCatalogue(String pattern) async {
+    if (pattern == '' || pattern.length < 2) return [];
+    List<dynamic> list = _jsonResonse["documents"];
+    int count = 0;
+
+    List<dynamic> tempList = [];
+
+    for (int i = 1; i < list.length - 1; i++) {
+      String? str = list[i]['data']['title'];
+      if (str != null && str.indexOf(pattern) != -1) {
+        tempList.add(list[i]);
+      }
+    }
+    print('for $pattern called the list size is ${tempList.length}');
+    return tempList;
   }
 }
