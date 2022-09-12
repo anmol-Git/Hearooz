@@ -1,9 +1,7 @@
 workflows:
   my-workflow:
-    instance_type: mac_pro
+    instance_type: mac_mini
     environment:
       xcode: 12.5
       cocoapods: 1.10.2
       flutter: beta
-
-
