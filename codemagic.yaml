@@ -5,3 +5,6 @@ workflows:
       xcode: 13.3
       cocoapods: 1.10.2
       flutter: beta
+    artifacts:
+      - build/ios/ipa/*.ipa
+
