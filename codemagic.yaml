@@ -6,7 +6,7 @@ workflows:
     environment:
       groups:
         
-        - appstore_credentials (Includes $ISSUER_ID, $KEY_ID, $APPLE_PRIVATE_KEY)
+        - appstore_credentials
 
       vars:
         XCODE_WORKSPACE: "Runner.xcworkspace"
