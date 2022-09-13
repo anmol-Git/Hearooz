@@ -1,6 +1,6 @@
 workflows:
   my-workflow:
-    instance_type: mac_mini
+    instance_type: mac_mini_m1
     environment:
       xcode: 12.5
       cocoapods: 1.10.2
