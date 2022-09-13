@@ -1,10 +1,10 @@
 workflows:
   my-workflow:
-    instance_type: mac_mini_m1
-    environment:
-      xcode: 13.3
-      cocoapods: 1.10.2
-      flutter: beta
-    artifacts:
-      - build/ios/ipa/*.ipa
-
+    publishing:
+      app_store_connect:
+        api_key: $APPLE_PRIVATE_KEY
+        key_id: $KEY_ID
+        issuer_id: $ISSUER_ID
+        submit_to_testflight: true
+        beta_groups:
+          - Beta Testers
