@@ -6,7 +6,7 @@ workflows:
     environment:
       groups:
         
-        - app_store_credentials # <-- (Includes APP_STORE_CONNECT_ISSUER_ID, APP_STORE_CONNECT_KEY_IDENTIFIER, APP_STORE_CONNECT_PRIVATE_KEY)
+        - appstore_credentials # <-- (Includes APP_STORE_CONNECT_ISSUER_ID, APP_STORE_CONNECT_KEY_IDENTIFIER, APP_STORE_CONNECT_PRIVATE_KEY)
         - $ISSUER_ID 
         - $KEY_ID
         - $APPLE_PRIVATE_KEY
