@@ -33,7 +33,7 @@ class _CircularMainPageListViewState extends State<CircularMainPageListView> {
             (await NetworkAssetBundle(Uri.parse(imgUrl)).load(imgUrl))
                 .buffer
                 .asUint8List();
-        print("The image exists!");
+        //? comment  print("The image exists!");
         return imgUrl;
       } catch (e) {
         print("Error: $e");

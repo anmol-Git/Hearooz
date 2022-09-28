@@ -1,10 +1,49 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:hearooz/providers/user_registration.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/link.dart';
+import 'package:http/http.dart' as http;
+import 'package:url_launcher/url_launcher.dart';
 
-class ProfileScreenUser extends StatelessWidget {
+class ProfileScreenUser extends StatefulWidget {
   const ProfileScreenUser({Key? key}) : super(key: key);
+
+  @override
+  State<ProfileScreenUser> createState() => _ProfileScreenUserState();
+}
+
+class _ProfileScreenUserState extends State<ProfileScreenUser> {
+  String finalUrl = "";
+  void initState() {
+    super.initState();
+    getUrl();
+  }
+
+  getUrl() async {
+    Future.delayed(const Duration(milliseconds: 300), () async {
+      var auth = Provider.of<UserRegistrationProvider>(context, listen: false)
+          .refreshToken;
+
+      print('the final auth is $auth');
+      const String baseurl =
+          'https://api.hearooz.de/api/v1/user/weblogin?target=profile';
+      var response = await http.get(Uri.parse(baseurl), headers: {
+        'Accept': 'application/json',
+        'Authorization': 'Bearer $auth'
+      });
+
+      if (response.statusCode == 200) {
+        var str = jsonDecode(response.body);
+        finalUrl = str['location'];
+        setState(() {});
+      } else {
+        print('error is ${response.statusCode}');
+      }
+      print('the url is $finalUrl');
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -57,8 +96,7 @@ class ProfileScreenUser extends StatelessWidget {
                         height: 60,
                         width: MediaQuery.of(context).size.width * 0.8,
                         child: Link(
-                            uri: Uri.parse(
-                                'https://www.hearooz.de/app/login?handover=${value.refreshToken}&target=user'),
+                            uri: Uri.parse(finalUrl),
                             builder:
                                 (context, Future<void> Function()? followLink) {
                               return TextButton(
@@ -66,7 +104,14 @@ class ProfileScreenUser extends StatelessWidget {
                                       backgroundColor:
                                           MaterialStateProperty.all(
                                               const Color(0xFF4a95fa))),
-                                  onPressed: followLink,
+                                  onPressed: () async {
+                                    await launchUrl((Uri.parse(finalUrl)),
+                                        webViewConfiguration:
+                                            const WebViewConfiguration(
+                                                enableJavaScript: true),
+                                        mode: LaunchMode
+                                            .externalNonBrowserApplication);
+                                  },
                                   child: const Text(
                                     'Profile bearbeiten',
                                     style: TextStyle(

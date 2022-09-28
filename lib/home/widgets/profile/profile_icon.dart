@@ -5,8 +5,22 @@ import 'package:wave/wave.dart';
 
 import '../../../auth/login_screen.dart';
 
-class ProfileScreen extends StatelessWidget {
+class ProfileScreen extends StatefulWidget {
   const ProfileScreen({Key? key}) : super(key: key);
+
+  @override
+  State<ProfileScreen> createState() => _ProfileScreenState();
+}
+
+class _ProfileScreenState extends State<ProfileScreen> {
+  @override
+  void initState() {
+    Future.delayed(const Duration(seconds: 2), () {
+      print('text size ${MediaQuery.of(context).textScaleFactor}');
+    });
+
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -30,11 +44,12 @@ class ProfileScreen extends StatelessWidget {
               width: MediaQuery.of(context).size.width * 0.8,
               top: 130,
               left: 40,
-              child: const Text(
+              child: Text(
                 'Jetzt kostenlos registrieren, um deine Favoriten zu speichern!',
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                  fontSize: 21,
+                  fontSize:
+                      MediaQuery.of(context).textScaleFactor >= 1 ? 17 : 21,
                   color: Color(0xFFafa278),
                 ),
               )),
@@ -82,51 +97,59 @@ class ProfileScreen extends StatelessWidget {
             ),
           ),
           Positioned(
-              width: MediaQuery.of(context).size.width * 0.75,
+              width: MediaQuery.of(context).size.width * 0.8,
               top: 270,
-              left: 30,
-              child: const Text(
-                'Du bist bereits registrient?',
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 18,
-                  color: Color(0xFFafa278),
-                ),
-              )),
-          Positioned(
-              width: 80,
-              top: 270,
-              right: 68,
-              child: InkWell(
-                onTap: () {
-                  Navigator.of(context, rootNavigator: true).push(
-                      PageRouteBuilder(
-                          transitionDuration: const Duration(milliseconds: 400),
-                          transitionsBuilder: (BuildContext context, animation,
-                              secAnimation, child) {
-                            animation = CurvedAnimation(
-                                parent: animation, curve: Curves.bounceIn);
-
-                            return ScaleTransition(
-                              scale: animation,
-                              alignment: Alignment.bottomCenter,
-                              child: child,
-                            );
-                          },
-                          pageBuilder:
-                              ((context, animation, secondaryAnimation) {
-                            return const LoginScreen();
-                          })));
-                },
-                child: const Text(
-                  'Zum login!',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                    color: Color(0xFF96906f),
+              left: MediaQuery.of(context).size.width * 0.20,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Text(
+                    'Du bist bereits registrient?',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize:
+                          MediaQuery.of(context).textScaleFactor >= 1 ? 14 : 18,
+                      color: const Color(0xFFafa278),
+                    ),
                   ),
-                ),
+                  const SizedBox(
+                    width: 2,
+                  ),
+                  InkWell(
+                    onTap: () {
+                      Navigator.of(context, rootNavigator: true).push(
+                          PageRouteBuilder(
+                              transitionDuration:
+                                  const Duration(milliseconds: 400),
+                              transitionsBuilder: (BuildContext context,
+                                  animation, secAnimation, child) {
+                                animation = CurvedAnimation(
+                                    parent: animation, curve: Curves.bounceIn);
+
+                                return ScaleTransition(
+                                  scale: animation,
+                                  alignment: Alignment.bottomCenter,
+                                  child: child,
+                                );
+                              },
+                              pageBuilder:
+                                  ((context, animation, secondaryAnimation) {
+                                return const LoginScreen();
+                              })));
+                    },
+                    child: Text(
+                      'Zum login!',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: MediaQuery.of(context).textScaleFactor >= 1
+                            ? 14
+                            : 18,
+                        fontWeight: FontWeight.bold,
+                        color: const Color(0xFF96906f),
+                      ),
+                    ),
+                  ),
+                ],
               )),
         ],
       ),

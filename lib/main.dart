@@ -5,6 +5,7 @@ import 'package:hearooz/audio/services/service_locator.dart';
 import 'package:hearooz/providers/api_registration_provider.dart';
 import 'package:hearooz/providers/audio_manager_provider.dart';
 import 'package:hearooz/providers/catalog_retrieval_provider.dart';
+import 'package:hearooz/providers/favorite_item_provider.dart';
 import 'package:hearooz/providers/profile_screen_provider.dart';
 import 'package:hearooz/providers/user_registration.dart';
 import 'package:hearooz/splash_screen.dart';
@@ -49,6 +50,9 @@ class MyApp extends StatelessWidget {
         ),
         ChangeNotifierProvider<AudioManagerProvider>(
           create: ((context) => AudioManagerProvider()),
+        ),
+        ChangeNotifierProvider<FavoriteItemProvider>(
+          create: ((context) => FavoriteItemProvider()),
         ),
       ],
       child: MaterialApp(

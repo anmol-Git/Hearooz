@@ -1,8 +1,12 @@
 import 'dart:typed_data';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:hearooz/providers/api_registration_provider.dart';
 import 'package:hearooz/providers/audio_manager_provider.dart';
+import 'package:hearooz/providers/favorite_item_provider.dart';
+import 'package:hearooz/providers/user_registration.dart';
 import 'package:provider/provider.dart';
 
 import '../../../audio/page_manager.dart';
@@ -128,14 +132,57 @@ class _HomePagePodcastAlbumState extends State<HomePagePodcastAlbum> {
                                   SizedBox(
                                     width:
                                         MediaQuery.of(context).size.width * .7,
-                                    child: Text(
-                                      widget.list[index]['data']['title'],
-                                      style: const TextStyle(
-                                        fontSize: 18,
-                                        color: Color.fromARGB(255, 35, 35, 35),
-                                        fontWeight: FontWeight.w500,
-                                      ),
-                                      textAlign: TextAlign.left,
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          widget.list[index]['data']['title'],
+                                          style: const TextStyle(
+                                            fontSize: 18,
+                                            color:
+                                                Color.fromARGB(255, 35, 35, 35),
+                                            fontWeight: FontWeight.w500,
+                                          ),
+                                          textAlign: TextAlign.left,
+                                        ),
+                                        const SizedBox(
+                                          height: 2,
+                                        ),
+                                        Consumer<UserRegistrationProvider>(
+                                            builder: (context, auth, child) {
+                                          return Consumer<FavoriteItemProvider>(
+                                              builder: (context, value, child) {
+                                            return auth.refreshToken != ''
+                                                ? IconButton(
+                                                    icon: Icon(value.list
+                                                            .where((element) =>
+                                                                element['id'] ==
+                                                                widget.list[
+                                                                        index]
+                                                                    ['id'])
+                                                            .isNotEmpty
+                                                        ? CupertinoIcons
+                                                            .heart_fill
+                                                        : CupertinoIcons.heart),
+                                                    onPressed: () {
+                                                      print(
+                                                          'the user auth token is ${auth.refreshToken}');
+                                                      value.addToFavorite(
+                                                          auth.refreshToken,
+                                                          widget.list[index],
+                                                          widget.list[index]
+                                                              ['id']);
+                                                    },
+                                                    iconSize: 36,
+                                                    color: Colors.red,
+                                                  )
+                                                : const SizedBox.shrink();
+                                          });
+                                        })
+                                      ],
                                     ),
                                   ),
                                 ],
