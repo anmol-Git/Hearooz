@@ -29,6 +29,8 @@
 		<key>UIMainStoryboardFile</key>
 		<string>Main</string>
 		<key>UISupportedInterfaceOrientations</key>
+		<key>NSMicrophoneUsageDescription</key>
+		<string>Need microphone access for playing audio</string>
 		<array>
 			<string>UIInterfaceOrientationPortrait</string>
 			<string>UIInterfaceOrientationLandscapeLeft</string>
@@ -44,8 +46,6 @@
 		<key>UIViewControllerBasedStatusBarAppearance</key>
 		<false/>
 		<key>UIStatusBarHidden</key>
-		<key>NSMicrophoneUsageDescription</key>
-		<string>Need microphone access for playing audio</string>
 		<false/>
 	</dict>
 </plist>
