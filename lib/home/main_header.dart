@@ -170,7 +170,7 @@ class _HeaderState extends State<Header> {
                   valueListenable: pageManager.progressNotifier,
                   builder: (_, value, __) {
                     return Container(
-                      height: 14,
+                      height: 18,
                       margin: const EdgeInsets.only(top: 20),
                       width: MediaQuery.of(context).size.width * 0.7,
                       alignment: Alignment.topCenter,
